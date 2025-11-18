@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard IOE - Inventario de Operaciones Estadísticas (2014-2023)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        :root {
+            --dark-blue: #003366;
+            --orange: #FF9900;
+            --light-blue: #0099CC;
+            --red: #990000;
+            --white: #FFFFFF;
+            --light-grey: #CCCCCC;
+            --black: #000000;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F4F4F4;
+            color: var(--black);
+        }
+
+        header {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+
+        .header-content p {
+            margin: 5px 0 0;
+            font-size: 1.1em;
+            color: #b0c4de;
+        }
+
+        #menu-anual {
+            background-color: var(--light-grey);
+            padding: 10px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--dark-blue);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .year-button {
+            background-color: var(--orange);
+            color: var(--black);
+            border: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .year-button:hover:not(.active) {
+            background-color: #ffb84d;
+        }
+
+        .year-button.active {
+            background-color: var(--light-blue);
+            color: var(--white);
+            box-shadow: 0 0 8px rgba(0, 153, 204, 0.6);
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .seccion-dashboard {
+            background-color: var(--white);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -10px;
+        }
+
+        .col-12 { width: 100%; padding: 10px; }
+        .col-6 { width: 50%; padding: 10px; }
+        .col-4 { width: 33.33%; padding: 10px; }
+
+        .chart-container {
+            padding: 20px;
+            border: 1px solid var(--light-grey);
+            border-radius: 8px;
+            height: 100%;
+        }
+
+        .detalle-anual h2 {
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .detalle-anual h3 {
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+
+        .indicador-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 5px solid var(--red);
+            background-color: #fffaf0;
+            border-radius: 4px;
+        }
+
+        .indicador-item strong {
+            color: var(--dark-blue);
+            font-size: 1.1em;
+        }
+
+        .nota-data {
+            text-align: center;
+            font-style: italic;
+            color: var(--dark-blue);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .col-6, .col-4 {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Bienvenido al Inventario de Operaciones Estadísticas (IOE)</h1>
+            <p>Evolución 2014 - 2023 del Sistema Estadístico Nacional (SISEN)</p>
+        </div>
+    </header>
+
+    <nav id="menu-anual">
+        <button class="year-button active" data-year="total" onclick="mostrarSeccion('resumen-total', this)">RESUMEN TOTAL</button>
+    </nav>
+
+    <main>
+        <section id="resumen-total" class="seccion-dashboard">
+            <h2 style="color: #003366;">📊 Evolución de las Operaciones Estadísticas (2014-2023)</h2>
+<div class="info-section">
+            <h2 class="info-title">¿Qué es el Inventario de Operaciones Estadísticas (IOE)?</h2>
+            <div class="info-content">
+                <p>El Inventario de Operaciones Estadísticas (IOE) es una recopilación de las Operaciones Estadísticas (OE) que se realizan en los organismos públicos que integran el Sistema Estadístico Nacional (SISEN) del Estado, coordinado y producido por cada área ejecutora y concebido como un proceso dinámico y perfectible.</p>
+                <p>Constituye un instrumento fundamental para la elaboración del Plan Estratégico Estadístico Nacional y para el fortalecimiento del Sistema Estadístico Nacional (SISEN).</p>
+                <p>Este proyecto tiene como finalidad esencial impulsar la coordinación de los productores de estadísticas oficiales dentro de cada institución y la armonización de metodologías entre las instituciones.</p>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2 class="info-title">Principales Áreas Temáticas</h2>
+            <div class="info-content">
+                <p>Las principales áreas temáticas, dominios o grandes ramas del campo estadístico que permiten una búsqueda más específica de las OE son:</p>
+                <ul>
+                    <li><strong>Dominio 1:</strong> Demografía y Estadísticas Sociales</li>
+                    <li><strong>Dominio 2:</strong> Estadísticas Económicas</li>
+                    <li><strong>Dominio 3:</strong> Estadísticas del Medio Ambiente y Estadísticas de Múltiples dominios</li>
+                    <li><strong>Dominio 4:</strong> Metodologías y Clasificaciones</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+                
+            <div class="row">
+                <div class="col-12">
+                    <div class="chart-container">
+                        <h3 style="color: #FF9900;">Evolución Anual de Operaciones Estadísticas (OE)</h3>
+                        <canvas id="evolucionAnualChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="chart-container">
+                        <h3 style="color: #0099CC;">Distribución de Participación por Servicio Estadístico</h3>
+                        <canvas id="servicioEstadisticoTotalChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="nota-data">**Total de Operaciones Estadísticas (2014-2023): 3,366**</p>
+        </section>
+
+        <section id="detalle-anual-container"></section>
+    </main>
+
+    <script>
+        Chart.register(ChartDataLabels);
+
+        const COLORS = {
+            DARK_BLUE: '#003366',
+            ORANGE: '#FF9900',
+            LIGHT_BLUE: '#0099CC',
+            RED: '#990000',
+            WHITE: '#FFFFFF',
+            GREY: '#CCCCCC',
+            BLACK: '#000000',
+            DEMOGRAPHY: '#003366',
+            ECONOMIC: '#FF9900',
+            ENVIRONMENT: '#0099CC',
+            METHODOLOGY: '#990000',
+        };
+
+        const totalOperaciones = 3366;
+        const AÑOS = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+
+        // DATOS CORREGIDOS
+        const datosFrecuenciaAnual = {
+            labels: AÑOS,
+            counts: [241, 291, 264, 311, 346, 349, 390, 395, 389, 390],
+            percents: [7.2, 8.6, 7.8, 9.2, 10.3, 10.4, 11.6, 11.7, 11.6, 11.6]
+        };
+
+        const datosServicioAnual = {
+            ine: [31.1, 29.2, 27.3, 23.8, 21.4, 19.5, 18.2, 19.5, 16.7, 13.8],
+            otros: [68.9, 70.8, 72.7, 76.2, 78.6, 80.5, 81.8, 80.5, 83.3, 86.2],
+            ine_counts: [75, 85, 72, 74, 74, 68, 71, 77, 65, 54],
+            otros_counts: [166, 206, 192, 237, 272, 281, 319, 318, 324, 336]
+        };
+
+        const datosDominiosAnual = {
+            labels: ['Demografía y Sociales', 'Estadísticas Económicas', 'Medio Ambiente y Múltiples Dominios', 'Metodologías y Clasificaciones'],
+            counts_si: {
+                2014: [126, 78, 30, 7],
+                2015: [158, 84, 43, 17],
+                2016: [142, 79, 24, 19],
+                2017: [180, 92, 43, 26],
+                2018: [188, 113, 48, 32],
+                2019: [189, 119, 45, 33],
+                2020: [211, 138, 48, 34],
+                2021: [217, 140, 41, 34],
+                2022: [204, 143, 42, 35],
+                2023: [197, 160, 38, 33]
+            },
+            percents_si: {
+                2014: [52.3, 32.4, 12.4, 2.9],
+                2015: [54.3, 28.9, 14.8, 5.8],
+                2016: [53.8, 29.9, 9.1, 7.2],
+                2017: [57.9, 29.6, 13.8, 8.4],
+                2018: [54.3, 32.7, 13.9, 9.2],
+                2019: [54.2, 34.1, 12.9, 9.5],
+                2020: [54.1, 35.4, 12.3, 8.7],
+                2021: [54.9, 35.4, 10.4, 8.6],
+                2022: [52.4, 36.8, 10.8, 9.0],
+                2023: [50.5, 41.0, 9.7, 8.5]
+            }
+        };
+
+        const datosMetodologiasAnual = {
+            labels: ['Obtención Directa', 'Fuentes Administrativas', 'Estadísticas Derivadas', 'Infraestructura Estadística'],
+            counts_si: {
+                2014: [87, 82, 63, 7],
+                2015: [101, 95, 77, 12],
+                2016: [87, 81, 79, 10],
+                2017: [96, 104, 81, 16],
+                2018: [88, 140, 86, 19],
+                2019: [81, 155, 78, 22],
+                2020: [81, 167, 102, 24],
+                2021: [84, 167, 107, 23],
+                2022: [70, 167, 116, 23],
+                2023: [74, 180, 102, 24]
+            },
+            percents_si: {
+                2014: [36.1, 34.0, 26.1, 2.9],
+                2015: [34.7, 32.6, 26.5, 4.1],
+                2016: [33.0, 30.7, 29.9, 3.8],
+                2017: [30.9, 33.4, 26.0, 5.1],
+                2018: [25.4, 40.5, 24.9, 5.5],
+                2019: [23.2, 44.4, 22.3, 6.3],
+                2020: [20.8, 42.8, 26.2, 6.2],
+                2021: [21.3, 42.3, 27.1, 5.8],
+                2022: [18.0, 42.9, 29.8, 5.9],
+                2023: [19.0, 46.2, 26.2, 6.2]
+            }
+        };
+
+        const datosDifusionAnual = {
+            labels: ['Difusión Pública', 'Limitada a petición del usuario', 'Exclusiva para uso interno del SEN', 'Aún no publicada'],
+            counts: {
+                2014: [168, 44, 22, 6],
+                2015: [212, 39, 38, 2],
+                2016: [196, 29, 34, 5],
+                2017: [244, 31, 32, 4],
+                2018: [256, 49, 36, 5],
+                2019: [257, 50, 36, 5],
+                2020: [292, 48, 43, 7],
+                2021: [300, 39, 44, 12],
+                2022: [299, 41, 40, 9],
+                2023: [282, 49, 43, 16]
+            },
+            percents: {
+                2014: [70.0, 18.3, 9.2, 2.5],
+                2015: [72.9, 13.4, 13.1, 0.7],
+                2016: [74.2, 11.0, 12.9, 1.9],
+                2017: [78.5, 10.0, 10.3, 1.3],
+                2018: [74.0, 14.2, 10.4, 1.4],
+                2019: [73.9, 14.4, 10.3, 1.4],
+                2020: [74.9, 12.3, 11.0, 1.8],
+                2021: [75.9, 9.9, 11.1, 3.0],
+                2022: [76.9, 10.5, 10.3, 2.3],
+                2023: [72.3, 12.6, 11.0, 4.1]
+            }
+        };
+        
+        // REEMPLAZAR la sección de topOrganismosPorAnio con estos datos corregidos:
+
+const topOrganismosPorAnio = {
+    2014: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 75, percent: '31.1%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 34, percent: '14.1%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 26, percent: '10.8%' },
+        { nombre: 'Ministerio de Educación y Cultura (MEC)', count: 9, percent: '3.7%' },
+        { nombre: 'Ministerio de la Mujer (MINMUJER)', count: 9, percent: '3.7%' }
+    ],
+    2015: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 85, percent: '29.2%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 45, percent: '15.5%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '9.3%' },
+        { nombre: 'Ministerio de Educación y Cultura (MEC)', count: 9, percent: '3.1%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 8, percent: '2.7%' }
+    ],
+    2016: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 72, percent: '27.3%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 38, percent: '14.4%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '10.2%' },
+        { nombre: 'Ministerio de Educación y Cultura (MEC)', count: 10, percent: '3.8%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 8, percent: '3.0%' }
+    ],
+    2017: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 74, percent: '23.8%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 50, percent: '16.1%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '8.7%' },
+        { nombre: 'Ministerio de Educación y Cultura (MEC)', count: 7, percent: '2.3%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 8, percent: '2.6%' }
+    ],
+    2018: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 74, percent: '21.4%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 50, percent: '14.5%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '7.8%' },
+        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 15, percent: '4.3%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 8, percent: '2.3%' }
+    ],
+    2019: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 68, percent: '19.5%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 45, percent: '12.9%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 29, percent: '8.3%' },
+        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 15, percent: '4.3%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 8, percent: '2.3%' }
+    ],
+    2020: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 71, percent: '18.2%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 41, percent: '10.5%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 29, percent: '7.4%' },
+        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 17, percent: '4.4%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 28, percent: '7.2%' }
+    ],
+    2021: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 77, percent: '19.5%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 44, percent: '11.1%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 37, percent: '9.4%' },
+        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 17, percent: '4.3%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 25, percent: '6.3%' }
+    ],
+    2022: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 65, percent: '16.7%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 47, percent: '12.1%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 36, percent: '9.3%' },
+        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 22, percent: '5.7%' },
+        { nombre: 'Ministerio de Hacienda (MH)', count: 23, percent: '5.9%' }
+    ],
+    2023: [
+        { nombre: 'Instituto Nacional de Estadística (INE)', count: 54, percent: '13.8%' },
+        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 41, percent: '10.5%' },
+        { nombre: 'Banco Central del Paraguay (BCP)', count: 38, percent: '9.7%' },
+        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 22, percent: '5.6%' },
+        { nombre: 'Dirección Nacional de Ingresos Tributarios (DNIT)', count: 13, percent: '3.3%' }
+    ]
+};
+        let chartInstances = {};
+
+        function destroyCharts() {
+            for (let id in chartInstances) {
+                if (chartInstances[id]) {
+                    chartInstances[id].destroy();
+                }
+            }
+            chartInstances = {};
+        }
+
+        function renderResumenTotal() {
+            destroyCharts();
+            
+            const resumenTotalSection = document.getElementById('resumen-total');
+            resumenTotalSection.style.display = 'block';
+
+            // Gráfico 1: Evolución Anual
+            const ctx1 = document.getElementById('evolucionAnualChart').getContext('2d');
+            chartInstances.evolucionAnualChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: datosFrecuenciaAnual.labels,
+                    datasets: [{
+                        label: 'Operaciones Estadísticas (Recuento)',
+                        data: datosFrecuenciaAnual.counts,
+                        borderColor: COLORS.DARK_BLUE,
+                        backgroundColor: 'rgba(0, 51, 102, 0.2)',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const dataIndex = context.dataIndex;
+                                    const count = datosFrecuenciaAnual.counts[dataIndex];
+                                    const percent = datosFrecuenciaAnual.percents[dataIndex];
+                                    return `Recuento: ${count.toLocaleString()} (${percent}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                const dataIndex = context.dataIndex;
+                                const percent = datosFrecuenciaAnual.percents[dataIndex];
+                                return `${value} (${percent}%)`;
+                            },
+                            color: COLORS.DARK_BLUE,
+                            align: 'top',
+                            offset: 8,
+                            font: { weight: 'bold', size: 10 }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Recuento de OE' } },
+                        x: { title: { display: true, text: 'Año' } }
+                    }
+                }
+            });
+
+            // Gráfico 2: Participación INE vs Otros
+            const ctx2 = document.getElementById('servicioEstadisticoTotalChart').getContext('2d');
+            chartInstances.servicioEstadisticoTotalChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: datosFrecuenciaAnual.labels,
+                    datasets: [
+                        {
+                            label: 'Otros Organismos Públicos',
+                            data: datosServicioAnual.otros,
+                            backgroundColor: COLORS.LIGHT_BLUE,
+                            stack: 'Stack 0',
+                        },
+                        {
+                            label: 'INE',
+                            data: datosServicioAnual.ine,
+                            backgroundColor: COLORS.ORANGE,
+                            stack: 'Stack 0',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { stacked: true, title: { display: true, text: 'Año' } },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Porcentaje de OE por Año' },
+                            ticks: { callback: function(value) { return value + "%"; } }
+                        }
+                    },
+                    plugins: {
+                        title: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const dataIndex = context.dataIndex;
+                                    const datasetIndex = context.datasetIndex;
+                                    const count = (datasetIndex === 0) ? datosServicioAnual.otros_counts[dataIndex] : datosServicioAnual.ine_counts[dataIndex];
+                                    return `${context.dataset.label}: ${context.parsed.y}% (Recuento: ${count})`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value) => value > 5 ? `${value.toFixed(1)}%` : null,
+                            color: COLORS.WHITE,
+                            font: { weight: 'bold', size: 10 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDetalleAnual(year, container) {
+            destroyCharts();
+
+            const yearIndex = AÑOS.indexOf(year);
+            const yearData = datosFrecuenciaAnual.counts[yearIndex];
+            const yearPercent = datosFrecuenciaAnual.percents[yearIndex];
+            const organismos = topOrganismosPorAnio[year] || topOrganismosPorAnio['2014'];
+            const dominiosCounts = datosDominiosAnual.counts_si[year];
+            const dominiosPercents = datosDominiosAnual.percents_si[year];
+            const metodologiasCounts = datosMetodologiasAnual.counts_si[year];
+            const metodologiasPercents = datosMetodologiasAnual.percents_si[year];
+            const difusionCounts = datosDifusionAnual.counts[year];
+            const difusionPercents = datosDifusionAnual.percents[year];
+
+            container.innerHTML = `
+                <h2 style="color: ${COLORS.DARK_BLUE};">🔍 Detalle de Operaciones Estadísticas - Año ${year}</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="indicador-item" style="border-left-color: ${COLORS.ORANGE}; background-color: #f7f3e8;">
+                            <h3>Total de Operaciones en ${year}: 
+                                <strong style="color: ${COLORS.ORANGE};">${yearData.toLocaleString()}</strong> 
+                                (${yearPercent}%)
+                            </h3>
+                            <p>Este año representa el ${yearPercent}% del total de OE registradas (2014-2023).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="chart-container">
+                            <h3 style="color: ${COLORS.DEMOGRAPHY};">Distribución de Dominios Temáticos</h3>
+                            <canvas id="dominiosChart${year}"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="chart-container">
+                            <h3 style="color: ${COLORS.RED};">Metodologías de Obtención Utilizadas</h3>
+                            <canvas id="metodologiasChart${year}"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="chart-container">
+                            <h3 style="color: ${COLORS.LIGHT_BLUE};">Tipo de Difusión de la OE</h3>
+                            <canvas id="difusionChart${year}"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="col-6">
+                        <div class="chart-container">
+                            <h3 style="color: ${COLORS.ORANGE};">Principales Organismos Productores (${year})</h3>
+                            <div id="organismosList${year}"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Gráfico 3: Dominios Temáticos
+            const ctx3 = document.getElementById(`dominiosChart${year}`).getContext('2d');
+            chartInstances[`dominiosChart${year}`] = new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: datosDominiosAnual.labels,
+                    datasets: [{
+                        data: dominiosCounts,
+                        backgroundColor: [COLORS.DEMOGRAPHY, COLORS.ECONOMIC, COLORS.ENVIRONMENT, COLORS.METHODOLOGY],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const dataIndex = context.dataIndex;
+                                    const count = dominiosCounts[dataIndex];
+                                    const percent = dominiosPercents[dataIndex];
+                                    return `${context.label}: ${count} OE (${percent}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                const percent = dominiosPercents[context.dataIndex];
+                                return `${percent}%`;
+                            },
+                            color: COLORS.WHITE,
+                            font: { weight: 'bold', size: 10 }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico 4: Metodologías de Obtención
+            const ctx4 = document.getElementById(`metodologiasChart${year}`).getContext('2d');
+            chartInstances[`metodologiasChart${year}`] = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: datosMetodologiasAnual.labels,
+                    datasets: [{
+                        label: 'OE por Metodología',
+                        data: metodologiasCounts,
+                        backgroundColor: [COLORS.RED, COLORS.RED, COLORS.RED, COLORS.GREY],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const dataIndex = context.dataIndex;
+                                    const percent = metodologiasPercents[dataIndex];
+                                    return `${context.dataset.label}: ${context.parsed.y} (${percent}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                const dataIndex = context.dataIndex;
+                                const percent = metodologiasPercents[dataIndex];
+                                return `${value} (${percent}%)`;
+                            },
+                            color: COLORS.DARK_BLUE,
+                            anchor: 'end',
+                            align: 'top',
+                            font: { weight: 'bold', size: 10 }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Recuento de OE' } }
+                    }
+                }
+            });
+
+            // Gráfico 5: Tipo de Difusión
+            const ctx5 = document.getElementById(`difusionChart${year}`).getContext('2d');
+            chartInstances[`difusionChart${year}`] = new Chart(ctx5, {
+                type: 'doughnut',
+                data: {
+                    labels: datosDifusionAnual.labels,
+                    datasets: [{
+                        data: difusionCounts,
+                        backgroundColor: [COLORS.LIGHT_BLUE, COLORS.DARK_BLUE, COLORS.ORANGE, COLORS.GREY],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const dataIndex = context.dataIndex;
+                                    const percent = difusionPercents[dataIndex];
+                                    return `${context.label}: ${context.parsed} OE (${percent}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                const dataIndex = context.dataIndex;
+                                const percent = difusionPercents[dataIndex];
+                                return `${percent}%`;
+                            },
+                            color: COLORS.WHITE,
+                            font: { weight: 'bold', size: 10 }
+                        }
+                    }
+                }
+            });
+
+            // Lista de Organismos
+            let organismosHTML = '<p>Se listan los principales productores de OE para el año seleccionado:</p><ul>';
+            organismos.forEach(org => {
+                organismosHTML += `<li class="indicador-item"><strong>${org.nombre}</strong>: ${org.count} OE (${org.percent})</li>`;
+            });
+            organismosHTML += '</ul>';
+            document.getElementById(`organismosList${year}`).innerHTML = organismosHTML;
+        }
+
+        function mostrarSeccion(id, clickedButton) {
+            document.querySelectorAll('.seccion-dashboard').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.year-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            const sectionToShow = document.getElementById(id);
+            if (sectionToShow) {
+                sectionToShow.style.display = 'block';
+            }
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+            
+            if (id === 'resumen-total') {
+                renderResumenTotal();
+            }
+        }
+
+        function initDashboard() {
+            const menu = document.getElementById('menu-anual');
+            const detalleContainer = document.getElementById('detalle-anual-container');
+            
+            AÑOS.forEach(year => {
+                const button = document.createElement('button');
+                button.className = 'year-button';
+                button.textContent = year;
+                button.setAttribute('data-year', year);
+                button.addEventListener('click', function() {
+                    mostrarSeccion(`detalle-${year}`, this);
+                });
+                menu.appendChild(button);
+                
+                const detalleDiv = document.createElement('section');
+                detalleDiv.id = `detalle-${year}`;
+                detalleDiv.className = 'seccion-dashboard detalle-anual';
+                detalleDiv.style.display = 'none';
+                detalleContainer.appendChild(detalleDiv);
+
+                detalleDiv.addEventListener('section-shown', () => renderDetalleAnual(year, detalleDiv));
+            });
+            
+            const originalMostrarSeccion = window.mostrarSeccion;
+            window.mostrarSeccion = (id, clickedButton) => {
+                originalMostrarSeccion(id, clickedButton);
+                if (id !== 'resumen-total' && id.startsWith('detalle-')) {
+                    const year = id.replace('detalle-', '');
+                    const detalleDiv = document.getElementById(id);
+                    detalleDiv.dispatchEvent(new Event('section-shown'));
+                }
+            };
+
+            mostrarSeccion('resumen-total', document.querySelector('[data-year="total"]'));
+        }
+
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

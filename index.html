@@ -788,7 +788,10 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
             const menu = document.getElementById('menu-anual');
             const detalleContainer = document.getElementById('detalle-anual-container');
             
-            AÑOS.forEach(year => {
+            // MODIFICACIÓN: Crear una copia invertida del array AÑOS para ordenar de mayor a menor
+            const AÑOS_INVERTIDOS = [...AÑOS].reverse();
+            
+            AÑOS_INVERTIDOS.forEach(year => {
                 const button = document.createElement('button');
                 button.className = 'year-button';
                 button.textContent = `Año ${year}`;

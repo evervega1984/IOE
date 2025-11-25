@@ -424,55 +424,54 @@
         function renderResumenTotal() {
             destroyCharts();
             const years = datosFrecuenciaAnual.labels;
-
-            // GRÁFICO 1: Evolución Anual (Series de Tiempo)
-            chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucionAnualChart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: years,
-                    datasets: [{
-                        label: 'Operaciones Estadísticas (Recuento)',
-                        data: datosFrecuenciaAnual.counts,
-                        borderColor: COLORS.DARK_BLUE,
-                        backgroundColor: 'rgba(0, 51, 102, 0.2)',
-                        fill: true, tension: 0.4, pointRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    const dataIndex = context.dataIndex;
-                                    const count = datosFrecuenciaAnual.counts[dataIndex];
-                                    const percent = datosFrecuenciaAnual.percents[dataIndex];
-                                    return `Recuento: ${count.toLocaleString()} (${percent}%)`;
-                                }
-                            }
-                        },
-                        datalabels: {
-                            formatter: (value, context) => {
-                                return `${datosFrecuenciaAnual.percents[context.dataIndex]}%`;
-                            },
-                            color: COLORS.DARK_BLUE, align: 'top', offset: 8, font: { weight: 'bold', size: 12 } 
-                        }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            title: { display: true, text: 'Recuento de OE' },
-                            ticks: { font: { size: 12 } } 
-                        },
-                        x: { 
-                            title: { display: true, text: 'Año' },
-                            ticks: { font: { size: 12 } } 
-                        }
+// GRÁFICO 1: Evolución Anual (Series de Tiempo)
+chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucionAnualChart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: years,
+        datasets: [{
+            label: 'Operaciones Estadísticas (Recuento)',
+            data: datosFrecuenciaAnual.counts,
+            borderColor: COLORS.DARK_BLUE,
+            backgroundColor: 'rgba(0, 51, 102, 0.2)',
+            fill: true, tension: 0.4, pointRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const count = datosFrecuenciaAnual.counts[dataIndex];
+                        const percent = datosFrecuenciaAnual.percents[dataIndex];
+                        return `Recuento: ${count.toLocaleString()} (${percent}%)`;
                     }
                 }
-            });
-
+            },
+            datalabels: {
+                formatter: (value, context) => {
+                    return `${datosFrecuenciaAnual.counts[context.dataIndex].toLocaleString()}`;
+                },
+                color: COLORS.DARK_BLUE, align: 'top', offset: 8, font: { weight: 'bold', size: 12 } 
+            }
+        },
+        scales: {
+            y: { 
+                beginAtZero: true, 
+                max: 450, // ← LÍNEA AGREGADA AQUÍ
+                title: { display: true, text: 'Recuento de OE', color: '#000000' },
+                ticks: { font: { size: 12 }, color: '#000000' } 
+            },
+            x: { 
+                title: { display: true, text: 'Año', color: '#000000' },
+                ticks: { font: { size: 12 }, color: '#000000' } 
+            }
+        }
+    }
+});
             // GRÁFICO 2: Participación INE vs Otros (Barras Apiladas)
             chartInstances.servicioEstadisticoTotalChart = new Chart(document.getElementById('servicioEstadisticoTotalChart').getContext('2d'), {
                 type: 'bar',
@@ -496,13 +495,13 @@
                     scales: {
                         x: { 
                             stacked: true, 
-                            title: { display: true, text: 'Año' }, 
-                            ticks: { font: { size: 12 } } 
+                            title: { display: true, text: 'Año', color: '#000000' }, 
+                            ticks: { font: { size: 12 }, color: '#000000' } 
                         },
                         y: {
                             stacked: true, beginAtZero: true, max: 100,
-                            title: { display: true, text: 'Porcentaje de OE' },
-                            ticks: { callback: (value) => value + "%", font: { size: 12 } } 
+                            title: { display: true, text: 'Porcentaje de OE', color: '#000000' },
+                            ticks: { callback: (value) => value + "%", font: { size: 12 }, color: '#000000' } 
                         }
                     },
                     plugins: {
@@ -622,8 +621,8 @@
                         datalabels: { formatter: (v) => `${v.toFixed(1)}%`, color: COLORS.DARK_BLUE, anchor: 'end', align: 'top', font: { weight: 'bold', size: 12 } }
                     },
                     scales: { 
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Promedio de Porcentaje por OE' }, ticks: { font: { size: 12 } } },
-                        x: { ticks: { font: { size: 12 } } }
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Promedio de Porcentaje por OE', color: '#000000' }, ticks: { font: { size: 12 }, color: '#000000' } },
+                        x: { ticks: { font: { size: 12 }, color: '#000000' } }
                     }
                 }
             });
@@ -645,8 +644,8 @@
                         datalabels: { formatter: (v) => `${v.toFixed(1)}%`, color: COLORS.DARK_BLUE, anchor: 'end', align: 'top', font: { weight: 'bold', size: 12 } }
                     },
                     scales: { 
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Promedio de Porcentaje por OE' }, ticks: { font: { size: 12 } } },
-                        x: { ticks: { font: { size: 12 } } }
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Promedio de Porcentaje por OE', color: '#000000' }, ticks: { font: { size: 12 }, color: '#000000' } },
+                        x: { ticks: { font: { size: 12 }, color: '#000000' } }
                     }
                 }
             });
@@ -669,8 +668,8 @@
                         datalabels: { formatter: (v, c) => `${v} (${recoleccionPercents[c.dataIndex]}%)`, color: COLORS.DARK_BLUE, anchor: 'end', align: 'right', font: { size: 12 } }
                     },
                     scales: { 
-                        x: { beginAtZero: true, title: { display: true, text: 'Recuento de OE' } },
-                        y: { ticks: { font: { size: 12 } } }
+                        x: { beginAtZero: true, title: { display: true, text: 'Recuento de OE', color: '#000000' }, ticks: { color: '#000000' } },
+                        y:  {ticks: { font: { size: 12 }, color: '#000000' }  }
                     }
                 }
             });
@@ -688,7 +687,7 @@
                 options: {
                     responsive: true, 
                     plugins: { 
-                        legend: { position: 'top' },
+                        legend: { position: 'top', labels: { color: '#000000' } },
                         tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed} OE (${coberturaPercents[c.dataIndex]}%)` } },
                         datalabels: { 
                             formatter: (v, c) => ``, // <--- CAMBIO CLAVE: Vacío para ocultar el valor
@@ -722,7 +721,7 @@
                 options: {
                     responsive: true, 
                     plugins: { 
-                        legend: { position: 'top' },
+                        legend: { position: 'top', labels: { color: '#000000' } },
                         tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed} OE (${difusionPercents[c.dataIndex]}%)` } },
                         datalabels: { 
                             formatter: (v, c) => ``, // <--- CAMBIO CLAVE: Vacío para ocultar el valor

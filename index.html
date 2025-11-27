@@ -16,6 +16,8 @@
             --white: #FFFFFF;
             --light-grey: #CCCCCC;
             --black: #000000;
+            --green: #33a02c; /* Verde para diferenciar mejor */
+            --purple: #6a0dad; /* Púrpura para diferenciar mejor */
         }
 
         body {
@@ -67,6 +69,7 @@
             margin-top: 0;
             border-bottom: 1px solid var(--light-grey);
             padding-bottom: 10px;
+            text-align: center; /* Centrado mejorado */
         }
 
         .info-content p {
@@ -105,6 +108,11 @@
             text-align: left;
         }
         
+        .year-button.active {
+            background-color: var(--dark-blue);
+            color: var(--white);
+        }
+        
         /* Contenedor principal de gráficos */
         main {
             flex-grow: 1;
@@ -131,6 +139,11 @@
             padding: 10px; 
             box-sizing: border-box; /* Asegura que padding no aumente el 50% */
         }
+        .col-4 { 
+            width: 33.33%; 
+            padding: 10px; 
+            box-sizing: border-box;
+        }
         /* ------------------------------------------------------------------- */
 
         .chart-container {
@@ -138,18 +151,30 @@
             border: 1px solid var(--light-grey);
             border-radius: 8px;
             height: 100%;
+            position: relative;
+        }
+
+        .chart-title {
+            text-align: center; /* Centrado mejorado */
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--dark-blue);
         }
 
         .detalle-anual h2 {
             border-bottom: 2px solid var(--orange);
             padding-bottom: 10px;
             margin-bottom: 20px;
+            text-align: center; /* Centrado mejorado */
         }
         
         .detalle-anual h3 {
             margin-top: 0;
             font-size: 1.3em;
             color: var(--dark-blue);
+            text-align: center; /* Centrado mejorado */
         }
 
         .indicador-item {
@@ -173,6 +198,18 @@
             font-style: italic;
             color: var(--dark-blue);
             margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .top-label {
+            display: inline-block;
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 5px;
+            vertical-align: middle;
         }
 
         /* Responsive */
@@ -229,12 +266,12 @@
 
         <main>
             <section id="resumen-total" class="seccion-dashboard">
-                <h2 style="color: #003366;">📊 Evolución de las Operaciones Estadísticas (2014-2023)</h2>
+                <h2 style="color: #003366; text-align: center;">📊 Evolución de las Operaciones Estadísticas (2014-2023)</h2>
                 
                 <div class="row">
                     <div class="col-12">
                         <div class="chart-container">
-                            <h3 style="color: #FF9900;">Evolución Anual de Operaciones Estadísticas (OE)</h3>
+                            <h3 class="chart-title">Evolución Anual de Operaciones Estadísticas (OE)</h3>
                             <canvas id="evolucionAnualChart"></canvas>
                         </div>
                     </div>
@@ -243,13 +280,16 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="chart-container">
-                            <h3 style="color: #0099CC;">Distribución de Participación por Servicio Estadístico</h3>
+                            <h3 class="chart-title">Distribución de Participación por Servicio Estadístico</h3>
+                            <p style="text-align: center; font-style: italic; margin-bottom: 15px;">
+                                Comparación entre el Instituto Nacional de Estadística (INE) y otros organismos del SISEN
+                            </p>
                             <canvas id="servicioEstadisticoTotalChart"></canvas>
                         </div>
                     </div>
                 </div>
                 
-                <p class="nota-data">**Total de Operaciones Estadísticas (2014-2023): 3,366**</p>
+                <p class="nota-data">**Total de Operaciones Estadísticas (2014-2023): 3.366**</p>
             </section>
 
             <section id="detalle-anual-container">
@@ -261,7 +301,7 @@
         // Registrar el plugin de datalabels globalmente
         Chart.register(ChartDataLabels);
 
-        // --- 1. CONFIGURACIÓN DE COLORES Y DATOS ESTATÍCOS ---
+        // --- 1. CONFIGURACIÓN DE COLORES Y DATOS ESTÁTICOS ---
         const COLORS = {
             DARK_BLUE: '#003366',
             ORANGE: '#FF9900',
@@ -270,6 +310,8 @@
             WHITE: '#FFFFFF',
             GREY: '#CCCCCC',
             BLACK: '#000000',
+            GREEN: '#33a02c',  // Verde para diferenciar mejor
+            PURPLE: '#6a0dad', // Púrpura para diferenciar mejor
             // Colores para Dominios
             DEMOGRAPHY: '#003366', 
             ECONOMIC: '#FF9900', 
@@ -299,7 +341,7 @@
             ine: [31.1, 29.2, 27.3, 23.8, 21.4, 19.5, 18.2, 19.5, 16.7, 13.8],
             otros: [68.9, 70.8, 72.7, 76.2, 78.6, 80.5, 81.8, 80.5, 83.3, 86.2],
             ine_counts: [75, 85, 72, 74, 74, 68, 71, 77, 65, 54],
-            otros_counts: [166, 206, 192, 237, 272, 281, 319, 318, 324, 336]
+            otros_counts: [166, 206, 192, 237, 272, 281, 319, 317, 324, 336]
         };
 
         const datosDominiosAnual = {
@@ -307,17 +349,25 @@
             percents_promedio: {
                 2014: [52.3, 32.4, 12.4, 2.9], 2015: [62.2, 34.4, 14.8, 5.8], 2016: [70.1, 39.4, 10.6, 7.2], 
                 2017: [71.7, 36.3, 12.2, 8.7], 2018: [67.1, 39.0, 13.9, 9.2], 2019: [66.5, 39.3, 13.2, 9.5], 
-                2020: [65.6, 39.2, 12.6, 8.7], 2021: [67.3, 39.5, 10.6, 8.6], 2022: [62.5, 39.8, 11.1, 9.0], 
+                2020: [65.6, 39.2, 12.6, 8.7], 2021: [67.6, 39.5, 10.6, 8.6], 2022: [62.5, 39.8, 11.1, 9.0], 
                 2023: [59.5, 44.6, 10.0, 8.5]
             }
         };
 
+        // Datos actualizados con las 5 metodologías
         const datosMetodologiasAnual = {
-            labels: ['Obtención Directa', 'Fuentes Administrativas', 'Estadísticas Derivadas'],
+            labels: ['Obtención Directa', 'Fuentes Administrativas', 'Estadísticas Derivadas', 'Infraestructura', 'Otras Metodologías'],
             percents_promedio: {
-                2014: [36.1, 34.0, 26.1], 2015: [34.7, 32.6, 26.5], 2016: [33.0, 30.7, 29.9], 2017: [30.9, 33.4, 26.0], 
-                2018: [25.4, 40.5, 24.9], 2019: [23.2, 44.4, 22.3], 2020: [20.8, 42.8, 26.2], 2021: [21.3, 42.3, 27.1], 
-                2022: [18.0, 42.9, 29.8], 2023: [19.0, 46.2, 26.2]
+                2014: [36.1, 34.0, 26.1, 2.9, 0.8], 
+                2015: [34.7, 32.6, 26.5, 4.1, 2.1], 
+                2016: [33.0, 30.7, 29.9, 3.8, 2.7], 
+                2017: [30.9, 33.4, 26.0, 5.1, 4.5], 
+                2018: [25.4, 40.5, 24.9, 5.5, 3.8], 
+                2019: [23.2, 44.4, 22.3, 6.3, 0.0], 
+                2020: [20.8, 42.8, 26.2, 6.2, 0.0], 
+                2021: [21.3, 42.3, 27.1, 5.8, 0.0], 
+                2022: [18.0, 42.9, 29.8, 5.9, 0.0], 
+                2023: [19.0, 46.2, 26.2, 6.2, 0.0]
             }
         };
 
@@ -326,12 +376,12 @@
             counts: {
                 2014: [168, 44, 22, 6], 2015: [212, 39, 38, 2], 2016: [196, 29, 34, 5], 2017: [244, 31, 32, 4],
                 2018: [256, 49, 36, 5], 2019: [257, 50, 36, 5], 2020: [292, 48, 43, 7], 2021: [300, 39, 44, 12],
-                2022: [299, 41, 40, 9], 2023: [282, 49, 43, 16]
+                2022: [299, 42, 39, 9], 2023: [282, 49, 43, 16]
             },
             percents: {
                 2014: [70.0, 18.3, 9.2, 2.5], 2015: [72.9, 13.4, 13.1, 0.7], 2016: [74.2, 11.0, 12.9, 1.9],
                 2017: [78.5, 10.0, 10.3, 1.3], 2018: [74.0, 14.2, 10.4, 1.4], 2019: [73.9, 14.4, 10.3, 1.4],
-                2020: [74.9, 12.3, 11.0, 1.8], 2021: [75.9, 9.9, 11.1, 3.0], 2022: [76.9, 10.5, 10.3, 2.3],
+                2020: [74.9, 12.3, 11.0, 1.8], 2021: [75.9, 9.9, 11.1, 3.0], 2022: [76.9, 10.8, 10.0, 2.3],
                 2023: [72.3, 12.6, 11.0, 4.1]
             }
         };
@@ -341,14 +391,14 @@
             counts: {
                 2014: [9, 8, 67, 0, 72, 3, 21], 2015: [5, 10, 81, 2, 87, 4, 20], 2016: [11, 13, 68, 1, 73, 2, 19],
                 2017: [10, 13, 78, 5, 99, 6, 22], 2018: [17, 13, 78, 6, 126, 6, 30], 2019: [25, 17, 78, 11, 141, 14, 29],
-                2020: [37, 25, 71, 14, 148, 11, 35], 2021: [39, 23, 68, 13, 143, 12, 43], 2022: [46, 25, 57, 16, 149, 12, 50],
+                2020: [37, 25, 71, 14, 148, 11, 35], 2021: [40, 23, 68, 13, 142, 12, 42], 2022: [46, 25, 57, 16, 149, 12, 50],
                 2023: [57, 29, 61, 16, 157, 15, 56]
             },
             percents: {
                 2014: [5.4, 4.8, 39.9, 0.0, 42.9, 1.8, 12.5], 2015: [2.6, 5.1, 41.3, 1.0, 44.4, 2.0, 10.2],
                 2016: [6.5, 7.7, 40.5, 0.6, 43.5, 1.2, 11.3], 2017: [5.0, 6.5, 39.0, 2.5, 49.5, 3.0, 11.0],
                 2018: [7.5, 5.7, 34.2, 2.6, 55.3, 2.6, 13.2], 2019: [10.6, 7.2, 33.1, 4.7, 59.7, 5.9, 12.3],
-                2020: [14.9, 10.1, 28.6, 5.6, 59.7, 4.4, 14.1], 2021: [15.5, 9.2, 27.1, 5.2, 57.0, 4.8, 17.1],
+                2020: [14.9, 10.1, 28.6, 5.6, 59.7, 4.4, 14.1], 2021: [15.9, 9.2, 27.1, 5.2, 56.6, 4.8, 16.7],
                 2022: [19.4, 10.5, 24.1, 6.8, 62.9, 5.1, 21.1], 2023: [22.4, 11.4, 24.0, 6.3, 61.8, 5.9, 22.0]
             }
         };
@@ -368,97 +418,100 @@
             }
         };
 
-       const topOrganismosPorAnio = {
-    2023: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 54, percent: '13.8%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 38, percent: '9.7%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 41, percent: '10.5%' },
-        { nombre: 'Ministerio de Economía y Finanzas (MEF)', count: 24, percent: '6.2%' },
-        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 22, percent: '5.6%' }
-    ],
-    2022: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 65, percent: '16.7%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 47, percent: '12.1%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 36, percent: '9.3%' },
-        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 22, percent: '5.7%' },
-        { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 26, percent: '6.7%' }
-    ],
-    2021: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 77, percent: '19.5%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 44, percent: '11.1%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 37, percent: '9.4%' },
-        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 17, percent: '4.3%' },
-        { nombre: 'Ministerio de Hacienda (MH)', count: 25, percent: '6.3%' }
-    ],
-    2020: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 71, percent: '18.2%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 41, percent: '10.5%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 29, percent: '7.4%' },
-        { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 28, percent: '7.2%' },
-        { nombre: 'Ministerio de Hacienda (MH)', count: 28, percent: '7.2%' }
-    ],
-    2019: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 68, percent: '19.5%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 45, percent: '12.9%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 29, percent: '8.3%' },
-        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 15, percent: '4.3%' },
-        { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 14, percent: '4.0%' }
-    ],
-    2018: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 74, percent: '21.4%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 50, percent: '14.5%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '7.8%' },
-        { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 15, percent: '4.3%' },
-        { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 13, percent: '3.8%' }
-    ],
-    2017: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 74, percent: '23.8%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 50, percent: '16.1%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '8.7%' },
-        { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 10, percent: '3.2%' },
-        { nombre: 'Universidad Nacional de Asunción (UNA)', count: 14, percent: '4.5%' }
-    ],
-    2016: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 72, percent: '27.3%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 38, percent: '14.4%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '10.2%' },
-        { nombre: 'Universidad Nacional de Asunción (UNA)', count: 13, percent: '4.9%' },
-        { nombre: 'Instituto Forestal Nacional (INFONA)', count: 10, percent: '3.8%' }
-    ],
-    2015: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 85, percent: '29.2%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 45, percent: '15.5%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '9.3%' },
-        { nombre: 'Instituto Forestal Nacional (INFONA)', count: 10, percent: '3.4%' },
-        { nombre: 'Universidad Nacional de Asunción (UNA)', count: 12, percent: '4.1%' }
-    ],
-    2014: [
-        { nombre: 'Instituto Nacional de Estadística (INE)', count: 75, percent: '31.1%' },
-        { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 34, percent: '14.1%' },
-        { nombre: 'Banco Central del Paraguay (BCP)', count: 26, percent: '10.8%' },
-        { nombre: 'Ministerio de Educación y Cultura (MEC)', count: 9, percent: '3.7%' },
-        { nombre: 'Universidad Nacional de Asunción (UNA)', count: 9, percent: '3.7%' }
-    ]
-};
+        const topOrganismosPorAnio = {
+            2023: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 54, percent: '13,8%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 41, percent: '10,5%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 38, percent: '9,7%' },
+                { nombre: 'Ministerio de Economía y Finanzas (MEF)', count: 24, percent: '6,2%' },
+                { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 22, percent: '5,6%' }
+            ],
+            2022: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 65, percent: '16,7%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 47, percent: '12,1%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 36, percent: '9,3%' },
+                { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 26, percent: '6,7%' },
+                { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 22, percent: '5,7%' }
+            ],
+            2021: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 78, percent: '19,7%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 43, percent: '10,9%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 37, percent: '9,4%' },
+                { nombre: 'Ministerio de Hacienda (MH)', count: 25, percent: '6,3%' },
+                { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 17, percent: '4,3%' }
+            ],
+            2020: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 71, percent: '18,2%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 41, percent: '10,5%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 29, percent: '7,4%' },
+                { nombre: 'Ministerio de Hacienda (MH)', count: 28, percent: '7,2%' },
+                { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 28, percent: '7,2%' }
+            ],
+            2019: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 68, percent: '19,5%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 45, percent: '12,9%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 29, percent: '8,3%' },
+                { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 15, percent: '4,3%' },
+                { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 14, percent: '4,0%' }
+            ],
+            2018: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 74, percent: '21,4%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 50, percent: '14,5%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '7,8%' },
+                { nombre: 'Ministerio de Obras Públicas y Comunicaciones (MOPC)', count: 15, percent: '4,3%' },
+                { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 13, percent: '3,8%' }
+            ],
+            2017: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 74, percent: '23,8%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 50, percent: '16,1%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '8,7%' },
+                { nombre: 'Ministerio de Trabajo, Empleo y Seguridad Social (MTESS)', count: 10, percent: '3,2%' },
+                { nombre: 'Universidad Nacional de Asunción (UNA)', count: 14, percent: '4,5%' }
+            ],
+            2016: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 72, percent: '27,3%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 38, percent: '14,4%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '10,2%' },
+                { nombre: 'Universidad Nacional de Asunción (UNA)', count: 13, percent: '4,9%' },
+                { nombre: 'Instituto Forestal Nacional (INFONA)', count: 10, percent: '3,8%' }
+            ],
+            2015: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 85, percent: '29,2%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 45, percent: '15,5%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 27, percent: '9,3%' },
+                { nombre: 'Instituto Forestal Nacional (INFONA)', count: 10, percent: '3,4%' },
+                { nombre: 'Universidad Nacional de Asunción (UNA)', count: 12, percent: '4,1%' }
+            ],
+            2014: [
+                { nombre: 'Instituto Nacional de Estadística (INE)', count: 75, percent: '31,1%' },
+                { nombre: 'Ministerio de Salud Pública y Bienestar Social (MSPyBS)', count: 34, percent: '14,1%' },
+                { nombre: 'Banco Central del Paraguay (BCP)', count: 26, percent: '10,8%' },
+                { nombre: 'Ministerio de Educación y Cultura (MEC)', count: 9, percent: '3,7%' },
+                { nombre: 'Universidad Nacional de Asunción (UNA)', count: 9, percent: '3,7%' }
+            ]
+        };
+
         const datosAporteAnual = {
             labels: ['Aporte Financiero', 'Cooperación Técnica', 'Recolección de Datos', 'Procesamiento de BD', 'Difusión de Resultados', 'Otro tipo de Aporte'],
             counts: {
                 2014: [43, 10, 13, 6, 3, 21], 2015: [48, 24, 16, 14, 6, 22], 2016: [41, 19, 18, 16, 9, 22],
                 2017: [46, 35, 16, 19, 9, 25], 2018: [46, 36, 20, 21, 11, 30], 2019: [36, 31, 24, 20, 13, 34],
+                2020: [33, 36, 27, 17, 8, 32], 2021: [33, 37, 33, 16, 9, 28], 2022: [27, 40, 41, 15, 10, 25],
                 2023: [27, 42, 48, 19, 11, 27]
             },
             percents: {
                 2014: [62.3, 14.5, 18.8, 8.7, 4.3, 30.4], 2015: [53.3, 26.7, 17.8, 15.6, 6.7, 24.4],
                 2016: [51.9, 24.1, 22.8, 20.3, 11.4, 27.8], 2017: [48.4, 36.8, 16.8, 20.0, 9.5, 26.3],
                 2018: [45.5, 35.6, 19.8, 20.8, 10.9, 29.7], 2019: [37.9, 32.6, 25.3, 21.1, 13.7, 35.8],
-                2023: [24.5, 38.2, 43.6, 17.3, 10.0, 24.5]
+                2020: [35.5, 38.7, 29.0, 18.3, 8.6, 34.4], 2021: [34.4, 38.5, 34.4, 16.7, 9.4, 29.2],
+                2022: [27.0, 40.0, 41.0, 15.0, 10.0, 25.0], 2023: [24.5, 38.2, 43.6, 17.3, 10.0, 24.5]
             }
         };
-
 
         // --- 3. FUNCIONES DE RENDERIZADO Y LÓGICA ---
 
         let chartInstances = {}; 
+        let resumenRenderizado = false; // Bandera para controlar si el resumen ya fue renderizado
 
         function destroyCharts() {
             for (let id in chartInstances) {
@@ -472,54 +525,67 @@
         function renderResumenTotal() {
             destroyCharts();
             const years = datosFrecuenciaAnual.labels;
-// GRÁFICO 1: Evolución Anual (Series de Tiempo)
-chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucionAnualChart').getContext('2d'), {
-    type: 'line',
-    data: {
-        labels: years,
-        datasets: [{
-            label: 'Operaciones Estadísticas (Recuento)',
-            data: datosFrecuenciaAnual.counts,
-            borderColor: COLORS.DARK_BLUE,
-            backgroundColor: 'rgba(0, 51, 102, 0.2)',
-            fill: true, tension: 0.4, pointRadius: 5
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: (context) => {
-                        const dataIndex = context.dataIndex;
-                        const count = datosFrecuenciaAnual.counts[dataIndex];
-                        const percent = datosFrecuenciaAnual.percents[dataIndex];
-                        return `Recuento: ${count.toLocaleString()} (${percent}%)`;
+
+            // GRÁFICO 1: Evolución Anual (Series de Tiempo)
+            chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucionAnualChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Operaciones Estadísticas (Recuento)',
+                        data: datosFrecuenciaAnual.counts,
+                        borderColor: COLORS.DARK_BLUE,
+                        backgroundColor: 'rgba(0, 51, 102, 0.2)',
+                        fill: true, 
+                        tension: 0.4, 
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const dataIndex = context.dataIndex;
+                                    const count = datosFrecuenciaAnual.counts[dataIndex];
+                                    const percent = datosFrecuenciaAnual.percents[dataIndex];
+                                    return `Recuento: ${count.toLocaleString()} (${percent.toLocaleString('es-ES')}%)`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                return `${datosFrecuenciaAnual.counts[context.dataIndex].toLocaleString()}`;
+                            },
+                            color: COLORS.DARK_BLUE, 
+                            align: 'top', 
+                            offset: 8, 
+                            font: { weight: 'bold', size: 12 } 
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 450,
+                            title: { display: true, text: 'Recuento de OE', color: '#000000' },
+                            ticks: { 
+                                font: { size: 12 }, 
+                                color: '#000000',
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            } 
+                        },
+                        x: { 
+                            title: { display: true, text: 'Año', color: '#000000' },
+                            ticks: { font: { size: 12 }, color: '#000000' } 
+                        }
                     }
                 }
-            },
-            datalabels: {
-                formatter: (value, context) => {
-                    return `${datosFrecuenciaAnual.counts[context.dataIndex].toLocaleString()}`;
-                },
-                color: COLORS.DARK_BLUE, align: 'top', offset: 8, font: { weight: 'bold', size: 12 } 
-            }
-        },
-        scales: {
-            y: { 
-                beginAtZero: true, 
-                max: 450, // ← LÍNEA AGREGADA AQUÍ
-                title: { display: true, text: 'Recuento de OE', color: '#000000' },
-                ticks: { font: { size: 12 }, color: '#000000' } 
-            },
-            x: { 
-                title: { display: true, text: 'Año', color: '#000000' },
-                ticks: { font: { size: 12 }, color: '#000000' } 
-            }
-        }
-    }
-});
+            });
+
             // GRÁFICO 2: Participación INE vs Otros (Barras Apiladas)
             chartInstances.servicioEstadisticoTotalChart = new Chart(document.getElementById('servicioEstadisticoTotalChart').getContext('2d'), {
                 type: 'bar',
@@ -529,12 +595,14 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                         {
                             label: 'Otros Organismos Públicos',
                             data: datosServicioAnual.otros,
-                            backgroundColor: COLORS.LIGHT_BLUE, stack: 'Stack 0',
+                            backgroundColor: COLORS.GREEN, // Cambiado a verde para mejor diferenciación
+                            stack: 'Stack 0',
                         },
                         {
                             label: 'INE',
                             data: datosServicioAnual.ine,
-                            backgroundColor: COLORS.ORANGE, stack: 'Stack 0',
+                            backgroundColor: COLORS.ORANGE, 
+                            stack: 'Stack 0',
                         }
                     ]
                 },
@@ -547,9 +615,15 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                             ticks: { font: { size: 12 }, color: '#000000' } 
                         },
                         y: {
-                            stacked: true, beginAtZero: true, max: 100,
+                            stacked: true, 
+                            beginAtZero: true, 
+                            max: 100,
                             title: { display: true, text: 'Porcentaje de OE', color: '#000000' },
-                            ticks: { callback: (value) => value + "%", font: { size: 12 }, color: '#000000' } 
+                            ticks: { 
+                                callback: (value) => value.toLocaleString('es-ES') + "%", 
+                                font: { size: 12 }, 
+                                color: '#000000' 
+                            } 
                         }
                     },
                     plugins: {
@@ -559,17 +633,20 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                                     const dataIndex = context.dataIndex;
                                     const datasetIndex = context.datasetIndex;
                                     const count = (datasetIndex === 0) ? datosServicioAnual.otros_counts[dataIndex] : datosServicioAnual.ine_counts[dataIndex];
-                                    return `${context.dataset.label}: ${context.parsed.y}% (Recuento: ${count})`;
+                                    return `${context.dataset.label}: ${context.parsed.y.toLocaleString('es-ES')}% (Recuento: ${count.toLocaleString()})`;
                                 }
                             }
                         },
                         datalabels: {
-                            formatter: (value) => value > 5 ? `${value.toFixed(0)}%` : null,
-                            color: COLORS.WHITE, font: { weight: 'bold', size: 12 } 
+                            formatter: (value) => value > 5 ? `${value.toLocaleString('es-ES')}%` : null,
+                            color: COLORS.WHITE, 
+                            font: { weight: 'bold', size: 12 } 
                         }
                     }
                 }
             });
+            
+            resumenRenderizado = true;
         }
 
         function renderDetalleAnual(year, container) {
@@ -589,15 +666,14 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
             const organismos = topOrganismosPorAnio[year] || topOrganismosPorAnio['2014'];
             const aporte = datosAporteAnual.percents[year] || datosAporteAnual.percents['2014'];
 
-
             container.innerHTML = `
-                <h2 style="color: ${COLORS.DARK_BLUE};">🔍 Detalle de Operaciones Estadísticas - Año ${year}</h2>
+                <h2 style="color: ${COLORS.DARK_BLUE}; text-align: center;">🔍 Detalle de Operaciones Estadísticas - Año ${year}</h2>
                 <div class="row">
                     <div class="col-12">
                         <div class="indicador-item primary">
                             <h3>Total de Operaciones en ${year}: 
                                 <strong style="color: ${COLORS.ORANGE};">${yearData.toLocaleString()}</strong> 
-                                (${yearPercent}% del total)
+                                (${yearPercent.toLocaleString('es-ES')}% del total)
                             </h3>
                         </div>
                     </div>
@@ -606,13 +682,13 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                 <div class="row">
                     <div class="col-6">
                         <div class="chart-container">
-                            <h3>Distribución de Dominios Temáticos (Promedio de % por OE)</h3>
+                            <h3 class="chart-title">Distribución de Dominios Temáticos (Promedio de % por OE)</h3>
                             <canvas id="dominiosChart${year}"></canvas>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="chart-container">
-                            <h3>Metodologías de Obtención Utilizadas (Promedio de % por OE)</h3>
+                            <h3 class="chart-title">Metodologías de Obtención Utilizadas (Promedio de % por OE)</h3>
                             <canvas id="metodologiasChart${year}"></canvas>
                         </div>
                     </div>
@@ -621,13 +697,13 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                 <div class="row">
                     <div class="col-6">
                         <div class="chart-container">
-                            <h3>Forma de Recolección de Datos (Recuento y %)</h3>
+                            <h3 class="chart-title">Forma de Recolección de Datos (Recuento y %)</h3>
                             <canvas id="recoleccionChart${year}"></canvas>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="chart-container">
-                            <h3>Cobertura Geográfica (Recuento y %)</h3>
+                            <h3 class="chart-title">Cobertura Geográfica (Recuento y %)</h3>
                             <canvas id="coberturaChart${year}"></canvas>
                         </div>
                     </div>
@@ -636,18 +712,20 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                 <div class="row">
                     <div class="col-6">
                         <div class="chart-container">
-                            <h3>Tipo de Difusión de la OE (Recuento y %)</h3>
+                            <h3 class="chart-title">Tipo de Difusión de la OE (Recuento y %)</h3>
                             <canvas id="difusionChart${year}"></canvas>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="chart-container">
-                            <h3>Información de Apoyo al SISEN</h3>
+                            <h3 class="chart-title">Información de Apoyo al SISEN</h3>
                             <div id="organismosList${year}" class="indicador-item secondary"></div>
                             <div id="aporteList${year}" class="indicador-item secondary"></div>
                         </div>
                     </div>
                 </div>
+                
+                ${year >= 2017 ? '<p class="nota-data">*Nota: Ministerio de Educación y Ciencias (MEC) desde 2017</p>' : ''}
             `;
             
             // --- CÓDIGO DE GRÁFICOS ---
@@ -664,18 +742,43 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                     }]
                 },
                 options: {
-                    responsive: true, plugins: { legend: { display: false },
-                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed.y.toFixed(1)}%` } },
-                        datalabels: { formatter: (v) => `${v.toFixed(1)}%`, color: COLORS.DARK_BLUE, anchor: 'end', align: 'top', font: { weight: 'bold', size: 12 } }
+                    responsive: true, 
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { 
+                            callbacks: { 
+                                label: (c) => `${c.label}: ${c.parsed.y.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1})}%` 
+                            } 
+                        },
+                        datalabels: { 
+                            formatter: (v) => `${v.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1})}%`, 
+                            color: COLORS.DARK_BLUE, 
+                            anchor: 'end', 
+                            align: 'top', 
+                            font: { weight: 'bold', size: 12 } 
+                        }
                     },
                     scales: { 
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Promedio de Porcentaje por OE', color: '#000000' }, ticks: { font: { size: 12 }, color: '#000000' } },
-                        x: { ticks: { font: { size: 12 }, color: '#000000' } }
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100, 
+                            title: { display: true, text: 'Promedio de Porcentaje por OE', color: '#000000' }, 
+                            ticks: { 
+                                font: { size: 12 }, 
+                                color: '#000000',
+                                callback: function(value) {
+                                    return value.toLocaleString('es-ES') + '%';
+                                }
+                            } 
+                        },
+                        x: { 
+                            ticks: { font: { size: 12 }, color: '#000000' } 
+                        }
                     }
                 }
             });
             
-            // GRÁFICO 4: Metodologías (Barras - Promedio %)
+            // GRÁFICO 4: Metodologías (Barras - Promedio %) - ACTUALIZADO CON 5 METODOLOGÍAS
             chartInstances[`metodologiasChart${year}`] = new Chart(document.getElementById(`metodologiasChart${year}`).getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -683,17 +786,42 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                     datasets: [{
                         label: 'Promedio (%)',
                         data: metodologiasPercents,
-                        backgroundColor: [COLORS.RED, COLORS.RED, COLORS.LIGHT_BLUE],
+                        backgroundColor: [COLORS.RED, COLORS.GREEN, COLORS.LIGHT_BLUE, COLORS.PURPLE, COLORS.ORANGE],
                     }]
                 },
                 options: {
-                    responsive: true, plugins: { legend: { display: false },
-                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed.y.toFixed(1)}%` } },
-                        datalabels: { formatter: (v) => `${v.toFixed(1)}%`, color: COLORS.DARK_BLUE, anchor: 'end', align: 'top', font: { weight: 'bold', size: 12 } }
+                    responsive: true, 
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { 
+                            callbacks: { 
+                                label: (c) => `${c.label}: ${c.parsed.y.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1})}%` 
+                            } 
+                        },
+                        datalabels: { 
+                            formatter: (v) => v > 0 ? `${v.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1})}%` : '', 
+                            color: COLORS.DARK_BLUE, 
+                            anchor: 'end', 
+                            align: 'top', 
+                            font: { weight: 'bold', size: 12 } 
+                        }
                     },
                     scales: { 
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Promedio de Porcentaje por OE', color: '#000000' }, ticks: { font: { size: 12 }, color: '#000000' } },
-                        x: { ticks: { font: { size: 12 }, color: '#000000' } }
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100, 
+                            title: { display: true, text: 'Promedio de Porcentaje por OE', color: '#000000' }, 
+                            ticks: { 
+                                font: { size: 12 }, 
+                                color: '#000000',
+                                callback: function(value) {
+                                    return value.toLocaleString('es-ES') + '%';
+                                }
+                            } 
+                        },
+                        x: { 
+                            ticks: { font: { size: 12 }, color: '#000000' } 
+                        }
                     }
                 }
             });
@@ -711,18 +839,41 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                 },
                 options: {
                     indexAxis: 'y',
-                    responsive: true, plugins: { legend: { display: false },
-                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed.x} OE (${recoleccionPercents[c.dataIndex]}%)` } },
-                        datalabels: { formatter: (v, c) => `${v} (${recoleccionPercents[c.dataIndex]}%)`, color: COLORS.DARK_BLUE, anchor: 'end', align: 'right', font: { size: 12 } }
+                    responsive: true, 
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { 
+                            callbacks: { 
+                                label: (c) => `${c.label}: ${c.parsed.x.toLocaleString()} OE (${recoleccionPercents[c.dataIndex].toLocaleString('es-ES')}%)` 
+                            } 
+                        },
+                        datalabels: { 
+                            formatter: (v, c) => `${v.toLocaleString()} (${recoleccionPercents[c.dataIndex].toLocaleString('es-ES')}%)`, 
+                            color: COLORS.DARK_BLUE, 
+                            anchor: 'end', 
+                            align: 'right', 
+                            font: { size: 12 } 
+                        }
                     },
                     scales: { 
-                        x: { beginAtZero: true, title: { display: true, text: 'Recuento de OE', color: '#000000' }, ticks: { color: '#000000' } },
-                        y:  {ticks: { font: { size: 12 }, color: '#000000' }  }
+                        x: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: 'Recuento de OE', color: '#000000' }, 
+                            ticks: { 
+                                color: '#000000',
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            } 
+                        },
+                        y:  {
+                            ticks: { font: { size: 12 }, color: '#000000' }  
+                        }
                     }
                 }
             });
 
-            // GRÁFICO 6: Cobertura Geográfica (Torta) - VALORES NUMÉRICOS OCULTOS
+            // GRÁFICO 6: Cobertura Geográfica (Torta) - CON PORCENTAJES VISIBLES
             chartInstances[`coberturaChart${year}`] = new Chart(document.getElementById(`coberturaChart${year}`).getContext('2d'), {
                 type: 'pie',
                 data: {
@@ -736,9 +887,16 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                     responsive: true, 
                     plugins: { 
                         legend: { position: 'top', labels: { color: '#000000' } },
-                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed} OE (${coberturaPercents[c.dataIndex]}%)` } },
+                        tooltip: { 
+                            callbacks: { 
+                                label: (c) => `${c.label}: ${c.parsed.toLocaleString()} OE (${coberturaPercents[c.dataIndex].toLocaleString('es-ES')}%)` 
+                            } 
+                        },
                         datalabels: { 
-                            formatter: (v, c) => ``, // <--- CAMBIO CLAVE: Vacío para ocultar el valor
+                            formatter: (v, c) => {
+                                const percent = coberturaPercents[c.dataIndex];
+                                return percent > 5 ? `${percent.toLocaleString('es-ES')}%` : '';
+                            },
                             color: COLORS.DARK_BLUE, 
                             anchor: 'end',
                             align: 'end',
@@ -755,8 +913,7 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                 }
             });
 
-
-            // GRÁFICO 7: Tipo de Difusión (Dona) - VALORES NUMÉRICOS OCULTOS
+            // GRÁFICO 7: Tipo de Difusión (Dona) - CON PORCENTAJES VISIBLES
             chartInstances[`difusionChart${year}`] = new Chart(document.getElementById(`difusionChart${year}`).getContext('2d'), {
                 type: 'doughnut',
                 data: {
@@ -770,9 +927,16 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                     responsive: true, 
                     plugins: { 
                         legend: { position: 'top', labels: { color: '#000000' } },
-                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed} OE (${difusionPercents[c.dataIndex]}%)` } },
+                        tooltip: { 
+                            callbacks: { 
+                                label: (c) => `${c.label}: ${c.parsed.toLocaleString()} OE (${difusionPercents[c.dataIndex].toLocaleString('es-ES')}%)` 
+                            } 
+                        },
                         datalabels: { 
-                            formatter: (v, c) => ``, // <--- CAMBIO CLAVE: Vacío para ocultar el valor
+                            formatter: (v, c) => {
+                                const percent = difusionPercents[c.dataIndex];
+                                return percent > 5 ? `${percent.toLocaleString('es-ES')}%` : '';
+                            },
                             color: COLORS.DARK_BLUE, 
                             anchor: 'end',
                             align: 'end',
@@ -789,23 +953,22 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
                 }
             });
 
-
             // LISTAS DE APOYO (Organismos y Aporte)
             
-            // Organismos
-            let organismosHTML = `<h4>Organismos Responsables (Top 5)</h4><ul>`;
+            // Organismos - CON ETIQUETA "TOP 5" MEJOR INTEGRADA
+            let organismosHTML = `<h4>Organismos Responsables <span class="top-label">Top 5</span></h4><ul>`;
             organismos.forEach(org => {
-                organismosHTML += `<li><strong>${org.nombre}</strong>: ${org.count} OE (${org.percent})</li>`;
+                organismosHTML += `<li><strong>${org.nombre}</strong>: ${org.count.toLocaleString()} OE (${org.percent})</li>`;
             });
             organismosHTML += '</ul>';
             document.getElementById(`organismosList${year}`).innerHTML = organismosHTML;
             
             // Tipo de Aporte (Top 3)
-            let aporteHTML = `<h4>Tipo de Aporte de Otros Organismos (Top 3)</h4><ul>`;
+            let aporteHTML = `<h4>Tipo de Aporte de Otros Organismos <span class="top-label">Top 3</span></h4><ul>`;
             const topAportes = datosAporteAnual.labels.map((label, i) => ({ label, percent: aporte[i] })).sort((a, b) => b.percent - a.percent).slice(0, 3);
 
             topAportes.forEach(a => {
-                aporteHTML += `<li><strong>${a.label}</strong>: ${a.percent}% de los aportes realizados</li>`;
+                aporteHTML += `<li><strong>${a.label}</strong>: ${a.percent.toLocaleString('es-ES')}% de los aportes realizados</li>`;
             });
             aporteHTML += '</ul><p style="font-size: 0.8em; margin-top: 5px;">*Porcentaje dentro del total de aportes reportados.</p>';
             document.getElementById(`aporteList${year}`).innerHTML = aporteHTML;
@@ -823,6 +986,12 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
             const sectionToShow = document.getElementById(id);
             if (sectionToShow) {
                 sectionToShow.style.display = 'block';
+                
+                // SI ES LA SECCIÓN DE RESUMEN TOTAL, RENDERIZAR LOS GRÁFICOS
+                if (id === 'resumen-total') {
+                    renderResumenTotal();
+                }
+                
                 if (id.startsWith('detalle-')) {
                     sectionToShow.dispatchEvent(new Event('section-shown'));
                 }
@@ -860,8 +1029,6 @@ chartInstances.evolucionAnualChart = new Chart(document.getElementById('evolucio
 
             // Mostrar el resumen total al inicio
             mostrarSeccion('resumen-total', document.querySelector('[data-year="total"]'));
-            // Renderizar el resumen para asegurar que los gráficos se dibujen
-            renderResumenTotal();
         }
 
         document.addEventListener('DOMContentLoaded', initDashboard);

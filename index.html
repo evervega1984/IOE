@@ -559,7 +559,7 @@
                             formatter: (value, context) => {
                                 return `${datosFrecuenciaAnual.counts[context.dataIndex].toLocaleString()}`;
                             },
-                            color: COLORS.DARK_BLUE, 
+                            color: COLORS.BLACK, // Cambiado a negro
                             align: 'top', 
                             offset: 8, 
                             font: { weight: 'bold', size: 12 } 
@@ -595,13 +595,13 @@
                         {
                             label: 'Otros Organismos Públicos',
                             data: datosServicioAnual.otros,
-                            backgroundColor: COLORS.GREEN, // Cambiado a verde para mejor diferenciación
+                            backgroundColor: '#0511F2', // Cambiado a verde #0511F2
                             stack: 'Stack 0',
                         },
                         {
                             label: 'INE',
                             data: datosServicioAnual.ine,
-                            backgroundColor: COLORS.ORANGE, 
+                            backgroundColor: '#D92534', // Cambiado a amarillo #D92534
                             stack: 'Stack 0',
                         }
                     ]
@@ -639,7 +639,7 @@
                         },
                         datalabels: {
                             formatter: (value) => value > 5 ? `${value.toLocaleString('es-ES')}%` : null,
-                            color: COLORS.WHITE, 
+                            color: COLORS.BLACK, // Cambiado a negro
                             font: { weight: 'bold', size: 12 } 
                         }
                     }
@@ -752,7 +752,7 @@
                         },
                         datalabels: { 
                             formatter: (v) => `${v.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1})}%`, 
-                            color: COLORS.DARK_BLUE, 
+                            color: COLORS.BLACK, // Cambiado a negro
                             anchor: 'end', 
                             align: 'top', 
                             font: { weight: 'bold', size: 12 } 
@@ -800,7 +800,7 @@
                         },
                         datalabels: { 
                             formatter: (v) => v > 0 ? `${v.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1})}%` : '', 
-                            color: COLORS.DARK_BLUE, 
+                            color: COLORS.BLACK, // Cambiado a negro
                             anchor: 'end', 
                             align: 'top', 
                             font: { weight: 'bold', size: 12 } 
@@ -849,7 +849,7 @@
                         },
                         datalabels: { 
                             formatter: (v, c) => `${v.toLocaleString()} (${recoleccionPercents[c.dataIndex].toLocaleString('es-ES')}%)`, 
-                            color: COLORS.DARK_BLUE, 
+                            color: COLORS.BLACK, // Cambiado a negro
                             anchor: 'end', 
                             align: 'right', 
                             font: { size: 12 } 
@@ -873,7 +873,7 @@
                 }
             });
 
-            // GRÁFICO 6: Cobertura Geográfica (Torta) - CON PORCENTAJES VISIBLES
+            // GRÁFICO 6: Cobertura Geográfica (Torta) - SIN PORCENTAJES VISIBLES
             chartInstances[`coberturaChart${year}`] = new Chart(document.getElementById(`coberturaChart${year}`).getContext('2d'), {
                 type: 'pie',
                 data: {
@@ -893,27 +893,13 @@
                             } 
                         },
                         datalabels: { 
-                            formatter: (v, c) => {
-                                const percent = coberturaPercents[c.dataIndex];
-                                return percent > 5 ? `${percent.toLocaleString('es-ES')}%` : '';
-                            },
-                            color: COLORS.DARK_BLUE, 
-                            anchor: 'end',
-                            align: 'end',
-                            offset: 8,
-                            font: { weight: 'bold', size: 12 }, 
-                            display: 'outside', 
-                            connector: { 
-                                display: true, 
-                                color: COLORS.DARK_BLUE, 
-                                width: 1 
-                            } 
+                            display: false // Ocultar valores en gráficos circulares
                         }
                     }
                 }
             });
 
-            // GRÁFICO 7: Tipo de Difusión (Dona) - CON PORCENTAJES VISIBLES
+            // GRÁFICO 7: Tipo de Difusión (Dona) - SIN PORCENTAJES VISIBLES
             chartInstances[`difusionChart${year}`] = new Chart(document.getElementById(`difusionChart${year}`).getContext('2d'), {
                 type: 'doughnut',
                 data: {
@@ -933,21 +919,7 @@
                             } 
                         },
                         datalabels: { 
-                            formatter: (v, c) => {
-                                const percent = difusionPercents[c.dataIndex];
-                                return percent > 5 ? `${percent.toLocaleString('es-ES')}%` : '';
-                            },
-                            color: COLORS.DARK_BLUE, 
-                            anchor: 'end',
-                            align: 'end',
-                            offset: 8,
-                            font: { weight: 'bold', size: 12 }, 
-                            display: 'outside', 
-                            connector: { 
-                                display: true, 
-                                color: COLORS.DARK_BLUE, 
-                                width: 1 
-                            } 
+                            display: false // Ocultar valores en gráficos circulares
                         }
                     }
                 }

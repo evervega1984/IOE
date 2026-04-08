@@ -17,156 +17,111 @@
     --gray-light: #E3E7ED;
     --text: #1C1C1C;
     --text-sec: #6B7280;
+    --green: #27AE60;
+    --green-light: #e8f8ef;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ─────────────────────────────────────── */
+  /* HEADER */
   .header {
-    background: var(--blue-main);
-    color: #fff;
-    padding: 20px 32px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px;
+    background: var(--blue-main); color: #fff;
+    padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
   }
-  .header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: .3px; }
-  .header p  { font-size: .83rem; opacity: .85; margin-top: 2px; }
-  .header-right { font-size: .78rem; opacity: .8; text-align: right; }
+  .header h1 { font-size: 1.25rem; font-weight: 700; }
+  .header p  { font-size: .8rem; opacity: .85; margin-top: 2px; }
+  .header-right { font-size: .75rem; opacity: .8; text-align: right; line-height: 1.5; }
+  .nota-prelim {
+    background: #fff8e1; border-left: 4px solid var(--orange); color: #7c5200;
+    font-size: .75rem; padding: 7px 16px; letter-spacing: .1px;
+  }
 
-  /* ── TAB NAV BAR ─────────────────────────────────── */
+  /* TAB BAR */
   .tab-bar {
-    background: var(--white);
-    border-bottom: 2px solid var(--gray-light);
-    padding: 10px 32px;
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    background: var(--white); border-bottom: 2px solid var(--gray-light);
+    padding: 8px 28px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .year-btns { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-
-  /* Tendencias pill */
   .tab-trend-btn {
-    padding: 6px 18px; border-radius: 22px; border: none;
+    padding: 5px 16px; border-radius: 20px; border: none;
     background: var(--orange); color: #fff; cursor: pointer;
-    font-size: .82rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
-    transition: background .2s; white-space: nowrap;
+    font-size: .8rem; font-weight: 700; transition: background .2s; white-space: nowrap;
   }
-  .tab-trend-btn:hover { background: var(--orange-strong); }
-  .tab-trend-btn.active { background: var(--orange-strong); }
-
-  /* Divisor */
-  .tab-divider { width: 1px; height: 28px; background: var(--gray-light); margin: 0 4px; }
-
-  /* Year buttons — siempre clicables */
+  .tab-trend-btn:hover, .tab-trend-btn.active { background: var(--orange-strong); }
+  .tab-divider { width: 1px; height: 26px; background: var(--gray-light); margin: 0 4px; }
   .year-btn {
-    padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--blue-light);
+    padding: 4px 12px; border-radius: 18px; border: 1.5px solid var(--blue-light);
     background: transparent; color: var(--blue-main); cursor: pointer;
-    font-size: .8rem; font-weight: 600; transition: all .2s;
+    font-size: .78rem; font-weight: 600; transition: all .2s;
   }
-  .year-btn.active, .year-btn:hover {
-    background: var(--blue-main); color: #fff; border-color: var(--blue-main);
-  }
-  /* Cuando estamos en tendencias, los años se ven atenuados visualmente
-     pero siguen siendo clicables (sin pointer-events:none) */
-  .year-btn.dimmed {
-    opacity: 0.45;
-  }
+  .year-btn.active, .year-btn:hover { background: var(--blue-main); color: #fff; border-color: var(--blue-main); }
+  .year-btn.dimmed { opacity: 0.4; }
 
-  /* ── MAIN LAYOUT ──────────────────────────────────── */
-  .main { padding: 24px 32px; display: grid; gap: 22px; max-width: 1600px; margin: auto; }
+  /* LAYOUT */
+  .main { padding: 20px 28px; display: grid; gap: 18px; max-width: 1700px; margin: auto; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 18px; }
+  @media (max-width: 1200px) { .grid-4 { grid-template-columns: 1fr 1fr; } .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 800px)  { .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; } }
 
-  /* ── KPI CARDS ───────────────────────────────────── */
-  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 14px; }
-  .kpi {
-    background: var(--white); border-radius: 12px; padding: 18px 20px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.07);
-  }
-  .kpi .label { font-size: .73rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-  .kpi .value { font-size: 1.9rem; font-weight: 700; color: var(--text); line-height: 1; }
-  .kpi .sub   { font-size: .72rem; color: var(--text-sec); margin-top: 5px; }
-  .kpi .badge { display: inline-block; font-size: .68rem; padding: 2px 8px; border-radius: 20px; margin-top: 6px; font-weight: 700; }
-  .badge-up   { background: #e0f4fa; color: var(--blue-main); }
-  .badge-down { background: #fdecea; color: var(--orange-strong); }
+  /* KPI */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px,1fr)); gap: 12px; }
+  .kpi { background: var(--white); border-radius: 10px; padding: 15px 18px; box-shadow: 0 1px 5px rgba(0,0,0,.07); }
+  .kpi .label { font-size: .7rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+  .kpi .value { font-size: 1.75rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .kpi .sub   { font-size: .68rem; color: var(--text-sec); margin-top: 4px; }
+  .kpi .badge { display: inline-block; font-size: .65rem; padding: 2px 7px; border-radius: 18px; margin-top: 5px; font-weight: 700; }
+  .badge-up      { background: #e0f4fa; color: var(--blue-main); }
+  .badge-down    { background: #fdecea; color: var(--orange-strong); }
   .badge-neutral { background: #f0f0f0; color: var(--text-sec); }
+  .badge-warn    { background: #fff3cd; color: #7c5200; }
 
-  /* ── SECTION TITLES ──────────────────────────────── */
+  /* CARDS */
+  .chart-card { background: var(--white); border-radius: 10px; box-shadow: 0 1px 5px rgba(0,0,0,.07); overflow: hidden; }
+  .chart-body { padding: 14px; }
+  .chart-wrap    { position: relative; height: 260px; }
+  .chart-wrap-sm { position: relative; height: 200px; }
+  .chart-wrap-xs { position: relative; height: 170px; }
+  .chart-wrap-lg { position: relative; height: 310px; }
+
+  /* SECTION TITLE */
   .section-title {
     background: var(--blue-light); color: #fff;
-    font-size: .8rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .6px; padding: 8px 16px; border-radius: 8px 8px 0 0;
-    display: flex; align-items: center; gap: 8px;
+    font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+    padding: 7px 14px; border-radius: 10px 10px 0 0;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-
-  /* ── CHART CARDS ──────────────────────────────────── */
-  .chart-card {
-    background: var(--white); border-radius: 12px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.07); overflow: hidden;
-  }
-  .chart-body { padding: 18px; }
-  .chart-wrap { position: relative; height: 280px; }
-  .chart-wrap-sm { position: relative; height: 220px; }
-
-  /* ── NOTA SELECCIÓN MÚLTIPLE ─────────────────────── */
   .multi-note {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: .68rem; color: var(--orange-strong);
+    font-size: .65rem; color: var(--orange-strong);
     background: #FFF3E0; border: 1px solid var(--orange);
-    border-radius: 10px; padding: 2px 9px; margin-left: 8px;
-    font-weight: 700; letter-spacing: .2px;
+    border-radius: 9px; padding: 1px 7px; font-weight: 700;
   }
 
-  /* ── GRID LAYOUTS ────────────────────────────────── */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-
-  @media (max-width: 1100px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 800px)  { .grid-2,.grid-3 { grid-template-columns: 1fr; } }
-
-  /* ── RANKINGS TABLE ──────────────────────────────── */
-  .rank-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
-  .rank-table th { background: var(--blue-bg); color: var(--blue-main); padding: 8px 12px; text-align: left; font-weight: 700; }
-  .rank-table td { padding: 7px 12px; border-bottom: 1px solid var(--gray-light); vertical-align: middle; }
+  /* RANKING TABLE */
+  .rank-table { width: 100%; border-collapse: collapse; font-size: .77rem; }
+  .rank-table th { background: var(--blue-bg); color: var(--blue-main); padding: 7px 10px; text-align: left; font-weight: 700; white-space: nowrap; }
+  .rank-table td { padding: 5px 10px; border-bottom: 1px solid var(--gray-light); vertical-align: middle; }
   .rank-table tr:last-child td { border-bottom: none; }
   .rank-table tr:hover td { background: var(--bg); }
-  .rank-num {
-    display: inline-block; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--blue-main); color: #fff; font-size: .7rem; font-weight: 700;
-    text-align: center; line-height: 22px; flex-shrink: 0;
-  }
+  .rank-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--blue-main); color: #fff; font-size: .66rem; font-weight: 700; flex-shrink: 0; }
   .rank-num.top1 { background: var(--orange); }
   .rank-num.top2 { background: var(--blue-light); }
   .rank-num.top3 { background: var(--text-sec); }
+  .bar-pct { height: 5px; border-radius: 3px; background: var(--blue-light); margin-top: 3px; }
 
-  /* Nombres agrupados con separador */
-  .org-group { display: flex; flex-direction: column; gap: 1px; }
-  .org-names { font-size: .8rem; line-height: 1.4; }
-  .org-sep { color: var(--text-sec); margin: 0 3px; }
+  /* TREND */
+  .trend-card { background: var(--white); border-radius: 10px; box-shadow: 0 1px 5px rgba(0,0,0,.07); overflow: hidden; }
+  .trend-body { padding: 14px; }
 
-  .bar-pct {
-    height: 6px; border-radius: 3px; background: var(--blue-light);
-    margin-top: 4px; transition: width .5s ease;
-  }
+  /* FOOTER */
+  .footer { text-align: center; padding: 18px; font-size: .7rem; color: var(--text-sec); }
 
-  /* ── TREND SECTION ───────────────────────────────── */
-  .trend-card {
-    background: var(--white); border-radius: 12px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.07); overflow: hidden;
-  }
-  .trend-body { padding: 18px; }
-  .trend-wrap { position: relative; height: 320px; }
-
-  /* ── FOOTER ──────────────────────────────────────── */
-  .footer { text-align: center; padding: 20px; font-size: .73rem; color: var(--text-sec); }
+  /* SECTION GROUP LABEL */
+  .sec-group { font-size: .7rem; font-weight: 700; color: var(--blue-main); text-transform: uppercase; letter-spacing: .6px; border-left: 3px solid var(--blue-light); padding-left: 8px; margin-bottom: -8px; }
 </style>
 </head>
 <body>
 
-<!-- ═══ HEADER ═══ -->
 <div class="header">
   <div>
     <h1>📊 Inventario de Operaciones Estadísticas (IOE)</h1>
@@ -175,760 +130,642 @@
   <div class="header-right">Fuente: INE — IOE 2014-2024<br>Actualizado: 2025</div>
 </div>
 
-<!-- ═══ TAB NAV ═══ -->
+<!-- TAB BAR -->
 <div class="tab-bar">
-  <button class="tab-trend-btn" id="btnTrend" onclick="setTab('trend')">
-    📈 Tendencias
-  </button>
+  <button class="tab-trend-btn" id="btnTrend" onclick="setTab('trend')">📈 Tendencias</button>
   <div class="tab-divider"></div>
-  <div class="year-btns" id="yearBtns"></div>
+  <div id="yearBtns" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;"></div>
 </div>
 
 <!-- ═══ YEAR VIEW ═══ -->
 <div id="viewYear">
 <div class="main">
 
-  <!-- KPIs -->
   <div class="kpi-row" id="kpiRow"></div>
 
-  <!-- GRID FILA 1 -->
+  <!-- FILA 1: Ranking + Dominio -->
   <div class="grid-2">
-
-    <!-- Top Organismos -->
     <div class="chart-card">
       <div class="section-title">🏢 Top Organismos por OE</div>
-      <div class="chart-body">
-        <table class="rank-table" id="rankTable"></table>
-      </div>
+      <div class="chart-body"><table class="rank-table" id="rankTable"></table></div>
     </div>
-
-    <!-- Dominios -->
     <div class="chart-card">
-      <div class="section-title">
-        🌐 Dominio de las OE (%)
-        <span class="multi-note">⚠ Selección múltiple</span>
-      </div>
-      <div class="chart-body">
-        <div class="chart-wrap"><canvas id="chartDominio"></canvas></div>
-      </div>
+      <div class="section-title">🌐 Dominio de las OE (%) <span class="multi-note">⚠ Selección múltiple</span></div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartDominio"></canvas></div></div>
     </div>
   </div>
 
-  <!-- GRID FILA 2 -->
+  <!-- FILA 2: Metodología + Difusión + Cobertura -->
   <div class="grid-3">
-
-    <!-- Metodología -->
     <div class="chart-card">
-      <div class="section-title">🔬 Metodología (%)</div>
-      <div class="chart-body">
-        <div class="chart-wrap-sm"><canvas id="chartMetod"></canvas></div>
-      </div>
+      <div class="section-title">🔬 Metodología (%) <span class="multi-note">⚠ Sel. múltiple</span></div>
+      <div class="chart-body"><div class="chart-wrap-sm"><canvas id="chartMetod"></canvas></div></div>
     </div>
-
-    <!-- Tipo Difusión -->
     <div class="chart-card">
       <div class="section-title">📡 Tipo de Difusión (%)</div>
-      <div class="chart-body">
-        <div class="chart-wrap-sm"><canvas id="chartDifusion"></canvas></div>
-      </div>
+      <div class="chart-body"><div class="chart-wrap-sm"><canvas id="chartDifusion"></canvas></div></div>
     </div>
-
-    <!-- Cobertura Geográfica -->
     <div class="chart-card">
       <div class="section-title">🗺️ Cobertura Geográfica (%)</div>
-      <div class="chart-body">
-        <div class="chart-wrap-sm"><canvas id="chartCobertura"></canvas></div>
-      </div>
+      <div class="chart-body"><div class="chart-wrap-sm"><canvas id="chartCobertura"></canvas></div></div>
     </div>
   </div>
 
-  <!-- GRID FILA 3 -->
+  <!-- FILA 3: Formas Difusión + Periodicidad Recolección -->
   <div class="grid-2">
-
-    <!-- Formas Difusión Pública -->
     <div class="chart-card">
-      <div class="section-title">
-        📢 Formas de Difusión Pública (%)
-        <span class="multi-note">⚠ Selección múltiple</span>
-      </div>
-      <div class="chart-body">
-        <div class="chart-wrap"><canvas id="chartFormasDif"></canvas></div>
-      </div>
+      <div class="section-title">📢 Formas de Difusión Pública (%) <span class="multi-note">⚠ Sel. múltiple</span></div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartFormasDif"></canvas></div></div>
     </div>
-
-    <!-- Periodicidad Recolección -->
     <div class="chart-card">
-      <div class="section-title">🗓️ Periodicidad de Recolección (regular vs irregular)</div>
-      <div class="chart-body">
-        <div class="chart-wrap"><canvas id="chartPeriodRec"></canvas></div>
-      </div>
+      <div class="section-title">🗓️ Periodicidad de Recolección: Regular vs Irregular</div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartPeriodRec"></canvas></div></div>
     </div>
   </div>
 
-</div><!-- .main -->
+  <!-- FILA 4: Recolección de Datos + Periodicidad Difusión -->
+  <div class="grid-2">
+    <div class="chart-card">
+      <div class="section-title">📋 Forma de Recolección de Datos (%) <span class="multi-note">⚠ Sel. múltiple</span></div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartRecoleccion"></canvas></div></div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title">⏱️ Periodicidad de Difusión Pública (%)</div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartPeriodDif"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- FILA 5: Tipo de Aporte + Año Referencia -->
+  <div class="grid-2">
+    <div class="chart-card">
+      <div class="section-title">🤝 Tipo de Aporte de Otros Organismos (%) <span class="multi-note">⚠ Sel. múltiple</span></div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartAporte"></canvas></div></div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title">📅 Año de Referencia de los Datos (%)</div>
+      <div class="chart-body"><div class="chart-wrap"><canvas id="chartAnoRef"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- FILA 6: Periodicidad Regular (detalle) -->
+  <div class="chart-card">
+    <div class="section-title">🔁 Periodicidad de Recolección Regular — Detalle por Frecuencia (%) <span class="multi-note">⚠ Sel. múltiple</span></div>
+    <div class="chart-body"><div class="chart-wrap-lg"><canvas id="chartPeriodDetalle"></canvas></div></div>
+  </div>
+
+</div>
 </div><!-- #viewYear -->
 
 <!-- ═══ TREND VIEW ═══ -->
 <div id="viewTrend" style="display:none">
 <div class="main">
 
-  <!-- KPIs tendencia -->
   <div class="kpi-row">
-    <div class="kpi">
-      <div class="label">Total OE 2024</div>
-      <div class="value">362</div>
-      <div class="sub">vs 241 en 2014</div>
-      <span class="badge badge-up">▲ +50%</span>
-    </div>
-    <div class="kpi">
-      <div class="label">Difusión Pública</div>
-      <div class="value">70→77%</div>
-      <div class="sub">Crecimiento sostenido 2014-2024</div>
-      <span class="badge badge-up">▲ tendencia</span>
-    </div>
-    <div class="kpi">
-      <div class="label">Recolección Regular</div>
-      <div class="value">70→87%</div>
-      <div class="sub">Mayor formalización</div>
-      <span class="badge badge-up">▲ +17 pp</span>
-    </div>
-    <div class="kpi">
-      <div class="label">Fuentes Admin.</div>
-      <div class="value">34→46%</div>
-      <div class="sub">Metodología dominante</div>
-      <span class="badge badge-up">▲ +12 pp</span>
-    </div>
-    <div class="kpi">
-      <div class="label">Obtención Directa</div>
-      <div class="value">36→15%</div>
-      <div class="sub">En declive sostenido</div>
-      <span class="badge badge-down">▼ -21 pp</span>
-    </div>
+    <div class="kpi"><div class="label">Total OE 2024</div><div class="value">387</div><div class="sub">vs 241 en 2014</div><span class="badge badge-up">▲ +61%</span></div>
+    
+    <div class="kpi"><div class="label">Difusión Pública</div><div class="value">70→75%</div><div class="sub">Tendencia positiva</div><span class="badge badge-up">▲ tendencia</span></div>
+    <div class="kpi"><div class="label">Recolección Regular</div><div class="value">70→87%</div><div class="sub">Mayor formalización</div><span class="badge badge-up">▲ +17 pp</span></div>
+    <div class="kpi"><div class="label">Fuentes Admin.</div><div class="value">34→48%</div><div class="sub">Metodología dominante</div><span class="badge badge-up">▲ +14 pp</span></div>
+    <div class="kpi"><div class="label">Obtención Directa</div><div class="value">36→14%</div><div class="sub">En declive sostenido</div><span class="badge badge-down">▼ -22 pp</span></div>
   </div>
 
-  <!-- Gráfico tendencia principal -->
+  <div class="trend-card">
+    <div class="section-title">📈 Tendencia — Total OE por Año (2014–2024)</div>
+    <div class="trend-body"><div style="position:relative;height:300px"><canvas id="chartTrend4"></canvas></div></div>
+  </div>
+
   <div class="trend-card">
     <div class="section-title">📈 Tendencia — Indicadores Clave de Difusión y Recolección (2014–2024)</div>
-    <div class="trend-body">
-      <div style="position:relative; height:340px"><canvas id="chartTrend1"></canvas></div>
-    </div>
+    <div class="trend-body"><div style="position:relative;height:320px"><canvas id="chartTrend1"></canvas></div></div>
   </div>
 
-  <!-- Gráfico tendencia metodología -->
   <div class="trend-card">
     <div class="section-title">🔬 Tendencia — Evolución de Metodologías (2014–2024)</div>
-    <div class="trend-body">
-      <div style="position:relative; height:300px"><canvas id="chartTrend2"></canvas></div>
-    </div>
+    <div class="trend-body"><div style="position:relative;height:290px"><canvas id="chartTrend2"></canvas></div></div>
   </div>
 
-  <!-- Gráfico tendencia dominios + OE total -->
   <div class="grid-2">
     <div class="trend-card">
       <div class="section-title">🌐 Tendencia — Dominios Estadísticos (2014–2024)</div>
-      <div class="trend-body">
-        <div style="position:relative; height:280px"><canvas id="chartTrend3"></canvas></div>
-      </div>
+      <div class="trend-body"><div style="position:relative;height:270px"><canvas id="chartTrend3"></canvas></div></div>
     </div>
     <div class="trend-card">
-      <div class="section-title">📦 Tendencia — Total OE por Año (2014–2024)</div>
-      <div class="trend-body">
-        <div style="position:relative; height:280px"><canvas id="chartTrend4"></canvas></div>
-      </div>
+      <div class="section-title">📋 Tendencia — Forma de Recolección (2014–2024)</div>
+      <div class="trend-body"><div style="position:relative;height:270px"><canvas id="chartTrend6"></canvas></div></div>
     </div>
   </div>
 
-  <!-- Gráfico top 5 organismos tendencia -->
   <div class="trend-card">
-    <div class="section-title">🏢 Tendencia — Top 5 Organismos (OE absolutas 2014–2024)</div>
-    <div class="trend-body">
-      <div style="position:relative; height:300px"><canvas id="chartTrend5"></canvas></div>
+    <div class="section-title">🏢 Tendencia — Top 6 Organismos (OE absolutas 2014–2024)</div>
+    <div class="trend-body"><div style="position:relative;height:290px"><canvas id="chartTrend5"></canvas></div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="trend-card">
+      <div class="section-title">🤝 Tendencia — Participación de Otros Organismos (%)</div>
+      <div class="trend-body"><div style="position:relative;height:250px"><canvas id="chartTrend7"></canvas></div></div>
+    </div>
+    <div class="trend-card">
+      <div class="section-title">📅 Tendencia — Año de Referencia (%)</div>
+      <div class="trend-body"><div style="position:relative;height:250px"><canvas id="chartTrend8"></canvas></div></div>
     </div>
   </div>
 
-</div><!-- .main -->
+</div>
 </div><!-- #viewTrend -->
 
 <div class="footer">INE Paraguay · Inventario de Operaciones Estadísticas 2014–2024 · Dashboard de análisis</div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   DATA BASE
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   DATOS — extraídos directamente del Excel
+═══════════════════════════════════════════ */
 const YEARS = [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
 
-const totalOE = {
-  2014:241, 2015:291, 2016:264, 2017:311, 2018:346,
-  2019:349, 2020:390, 2021:395, 2022:389, 2023:390, 2024:362
-};
+// 1A — Total OE
+const totalOE = {2014:241,2015:291,2016:264,2017:311,2018:346,2019:349,2020:390,2021:395,2022:389,2023:390,2024:387};
 
-// Organismos — datos completos extraídos del PDF (Cuadro 1A)
+// 1B — Organismos (OE absolutas) — fuente: Excel 1B_OE_Organismo
 const organismos = {
-  "INE":        {2014:75,2015:85,2016:72,2017:74,2018:74,2019:68,2020:71,2021:78,2022:65,2023:54,2024:42},
-  "MSPyBS":     {2014:34,2015:45,2016:38,2017:50,2018:50,2019:45,2020:41,2021:43,2022:47,2023:41,2024:43},
-  "BCP":        {2014:26,2015:27,2016:27,2017:27,2018:27,2019:29,2020:29,2021:37,2022:36,2023:38,2024:39},
-  "MEF":        {2014:7,2015:8,2016:10,2017:11,2018:11,2019:11,2020:31,2021:28,2022:26,2023:24,2024:15},
-  "MTESS":      {2014:2,2015:5,2016:7,2017:10,2018:13,2019:14,2020:28,2021:24,2022:26,2023:22,2024:25},
-  "MOPC":       {2014:7,2015:8,2016:10,2017:9,2018:17,2019:17,2020:17,2021:17,2022:22,2023:22,2024:25},
-  "UNA":        {2014:11,2015:14,2016:13,2017:15,2018:12,2019:12,2020:13,2021:13,2022:13,2023:13,2024:15},
-  "INFONA":     {2014:7,2015:10,2016:10,2017:10,2018:10,2019:10,2020:10,2021:10,2022:10,2023:0,2024:9},
-  "SENACSA":    {2014:5,2015:5,2016:5,2017:5,2018:5,2019:7,2020:7,2021:6,2022:6,2023:6,2024:10},
-  "SENATUR":    {2014:4,2015:4,2016:4,2017:6,2018:8,2019:8,2020:7,2021:7,2022:7,2023:6,2024:5},
-  "MDI":        {2014:6,2015:5,2016:5,2017:9,2018:8,2019:8,2020:8,2021:6,2022:6,2023:5,2024:0},
-  "SENAD":      {2014:0,2015:5,2016:5,2017:6,2018:7,2019:8,2020:8,2021:8,2022:7,2023:3,2024:0},
-  "SNC":        {2014:2,2015:3,2016:0,2017:6,2018:6,2019:6,2020:7,2021:7,2022:7,2023:5,2024:5},
-  "DNIT":       {2014:2,2015:2,2016:0,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:13,2024:13},
-  "MADES":      {2014:7,2015:7,2016:0,2017:0,2018:6,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
-  "TSJE":       {2014:2,2015:4,2016:4,2017:4,2018:5,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
-  "MIC":        {2014:2,2015:4,2016:2,2017:5,2018:5,2019:3,2020:4,2021:2,2022:5,2023:9,2024:8},
-  "MEC":        {2014:9,2015:9,2016:10,2017:7,2018:1,2019:0,2020:2,2021:2,2022:2,2023:2,2024:2},
-  "MINMUJER":   {2014:2,2015:2,2016:0,2017:2,2018:7,2019:7,2020:7,2021:2,2022:2,2023:7,2024:7},
-  "CONGRESO":   {2014:0,2015:0,2016:0,2017:0,2018:6,2019:6,2020:6,2021:6,2022:6,2023:6,2024:6},
-  "CSJ":        {2014:3,2015:3,2016:4,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "DINAC":      {2014:3,2015:3,2016:3,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:5,2024:1},
-  "MDP":        {2014:0,2015:0,2016:0,2017:0,2018:0,2019:3,2020:3,2021:7,2022:8,2023:9,2024:9},
-  "ANDE":       {2014:3,2015:3,2016:3,2017:3,2018:3,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "INCOOP":     {2014:5,2015:5,2016:0,2017:0,2018:5,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
-  "MJ":         {2014:3,2015:3,2016:3,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:4,2024:4},
-  "MAG":        {2014:3,2015:3,2016:3,2017:3,2018:3,2019:3,2020:3,2021:3,2022:3,2023:3,2024:3},
-  "SEDECO":     {2014:0,2015:0,2016:0,2017:3,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "CONACYT":    {2014:1,2015:0,2016:3,2017:3,2018:3,2019:3,2020:3,2021:4,2022:4,2023:4,2024:3},
-  "MUVH":       {2014:0,2015:0,2016:0,2017:1,2018:1,2019:7,2020:7,2021:4,2022:4,2023:4,2024:4},
-  "IPS":        {2014:3,2015:3,2016:3,2017:1,2018:1,2019:1,2020:3,2021:3,2022:3,2023:3,2024:3},
-  "ESSAP":      {2014:0,2015:0,2016:2,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:3,2024:3},
-  "ANNP":       {2014:2,2015:2,2016:2,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:2,2024:2},
-  "SEDERREC":   {2014:0,2015:0,2016:0,2017:0,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:1},
-  "INDERT":     {2014:0,2015:0,2016:0,2017:0,2018:1,2019:1,2020:1,2021:4,2022:0,2023:4,2024:4},
+  "INE":       {2014:75,2015:85,2016:72,2017:74,2018:74,2019:68,2020:71,2021:78,2022:65,2023:54,2024:42},
+  "MSPyBS":    {2014:34,2015:45,2016:38,2017:50,2018:50,2019:45,2020:41,2021:43,2022:47,2023:41,2024:45},
+  "BCP":       {2014:26,2015:27,2016:27,2017:27,2018:27,2019:29,2020:29,2021:37,2022:36,2023:38,2024:39},
+  "UNA":       {2014:11,2015:14,2016:13,2017:15,2018:12,2019:12,2020:13,2021:13,2022:13,2023:13,2024:15},
+  "MEC":       {2014:9,2015:9,2016:10,2017:7,2018:1,2019:0,2020:2,2021:2,2022:2,2023:2,2024:2},
+  "MEF":       {2014:7,2015:8,2016:10,2017:11,2018:11,2019:11,2020:31,2021:28,2022:26,2023:24,2024:22},
+  "MOPC":      {2014:7,2015:8,2016:10,2017:9,2018:17,2019:17,2020:17,2021:17,2022:22,2023:22,2024:25},
+  "INFONA":    {2014:7,2015:10,2016:10,2017:10,2018:10,2019:10,2020:10,2021:10,2022:10,2023:0,2024:9},
+  "MADES":     {2014:7,2015:7,2016:0,2017:0,2018:6,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
+  "MDI":       {2014:6,2015:5,2016:5,2017:9,2018:8,2019:8,2020:8,2021:6,2022:6,2023:5,2024:1},
+  "SENACSA":   {2014:5,2015:5,2016:5,2017:5,2018:5,2019:7,2020:7,2021:6,2022:6,2023:6,2024:10},
+  "SENATUR":   {2014:4,2015:4,2016:4,2017:6,2018:8,2019:8,2020:7,2021:7,2022:7,2023:6,2024:5},
+  "DINAC":     {2014:3,2015:3,2016:4,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:5,2024:5},
+  "CSJ":       {2014:3,2015:3,2016:4,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
+  "ANDE":      {2014:3,2015:3,2016:3,2017:3,2018:3,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
+  "MAG":       {2014:3,2015:3,2016:3,2017:3,2018:3,2019:3,2020:3,2021:3,2022:3,2023:3,2024:3},
+  "IPS":       {2014:3,2015:3,2016:3,2017:1,2018:1,2019:1,2020:3,2021:3,2022:3,2023:3,2024:3},
+  "MTESS":     {2014:2,2015:5,2016:7,2017:10,2018:13,2019:14,2020:28,2021:24,2022:26,2023:22,2024:25},
+  "SNC":       {2014:2,2015:3,2016:0,2017:6,2018:6,2019:6,2020:7,2021:7,2022:8,2023:5,2024:5},
+  "DNIT":      {2014:2,2015:2,2016:0,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:13,2024:13},
+  "TSJE":      {2014:2,2015:4,2016:4,2017:4,2018:5,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
+  "MIC":       {2014:2,2015:4,2016:2,2017:5,2018:5,2019:3,2020:4,2021:2,2022:5,2023:9,2024:8},
+  "MINMUJER":  {2014:2,2015:2,2016:0,2017:2,2018:7,2019:7,2020:7,2021:2,2022:2,2023:7,2024:7},
+  "MJ":        {2014:2,2015:3,2016:4,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:4,2024:4},
+  "ANNP":      {2014:2,2015:2,2016:2,2017:2,2018:3,2019:3,2020:3,2021:3,2022:2,2023:2,2024:2},
+  "MP":        {2014:2,2015:2,2016:2,2017:2,2018:0,2019:1,2020:2,2021:3,2022:3,2023:3,2024:3},
+  "SENAVE":    {2014:2,2015:2,2016:2,2017:3,2018:3,2019:2,2020:2,2021:1,2022:1,2023:2,2024:0},
+  "CONATEL":   {2014:2,2015:2,2016:0,2017:2,2018:2,2019:2,2020:2,2021:2,2022:2,2023:3,2024:0},
+  "CONACYT":   {2014:1,2015:0,2016:3,2017:3,2018:3,2019:3,2020:3,2021:4,2022:4,2023:4,2024:3},
+  "ESSAP":     {2014:1,2015:0,2016:2,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:3,2024:3},
+  "MDS":       {2014:1,2015:2,2016:2,2017:2,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "DINACOPA":  {2014:1,2015:1,2016:1,2017:0,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "COPACO":    {2014:1,2015:1,2016:1,2017:0,2018:1,2019:1,2020:1,2021:0,2022:1,2023:1,2024:1},
+  "MDN":       {2014:1,2015:0,2016:0,2017:0,2018:1,2019:0,2020:0,2021:0,2022:1,2023:0,2024:0},
+  "MDP":       {2014:0,2015:0,2016:0,2017:0,2018:0,2019:3,2020:3,2021:7,2022:8,2023:9,2024:9},
+  "INCOOP":    {2014:0,2015:0,2016:0,2017:0,2018:5,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
+  "SEDECO":    {2014:0,2015:0,2016:1,2017:3,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
+  "MUVH":      {2014:0,2015:0,2016:0,2017:1,2018:1,2019:7,2020:4,2021:4,2022:4,2023:4,2024:4},
+  "INDERT":    {2014:0,2015:0,2016:0,2017:0,2018:1,2019:1,2020:1,2021:4,2022:0,2023:4,2024:4},
+  "SENAD":     {2014:0,2015:5,2016:6,2017:7,2018:8,2019:8,2020:8,2021:8,2022:7,2023:3,2024:0},
+  "Congreso":  {2014:0,2015:0,2016:0,2017:0,2018:6,2019:6,2020:6,2021:6,2022:6,2023:6,2024:6},
+  "MITIC":     {2014:0,2015:1,2016:0,2017:4,2018:4,2019:4,2020:3,2021:2,2022:0,2023:3,2024:0},
+  "IPTA":      {2014:0,2015:0,2016:0,2017:2,2018:2,2019:2,2020:2,2021:2,2022:2,2023:1,2024:1},
+  "DINATRAN":  {2014:0,2015:2,2016:2,2017:2,2018:1,2019:1,2020:1,2021:0,2022:1,2023:1,2024:1},
+  "ERSSAN":    {2014:0,2015:2,2016:0,2017:2,2018:0,2019:2,2020:2,2021:0,2022:2,2023:0,2024:2},
+  "SENADIS":   {2014:0,2015:1,2016:0,2017:1,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "SEN":       {2014:0,2015:1,2016:0,2017:1,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "MINNA":     {2014:0,2015:1,2016:1,2017:0,2018:0,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "FEPASA":    {2014:0,2015:0,2016:0,2017:0,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "PETROPAR":  {2014:0,2015:0,2016:0,2017:0,2018:1,2019:0,2020:1,2021:1,2022:1,2023:1,2024:1},
+  "DNCP":      {2014:0,2015:0,2016:0,2017:0,2018:0,2019:1,2020:1,2021:1,2022:1,2023:2,2024:2},
+  "INDI":      {2014:0,2015:0,2016:0,2017:0,2018:0,2019:1,2020:1,2021:1,2022:1,2023:1,2024:2},
+  "SND":       {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:3,2021:3,2022:0,2023:3,2024:3},
+  "ANTSV":     {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:4,2024:4},
+  "Senadores": {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:2,2022:0,2023:4,2024:4},
+  "Social":    {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:1,2021:1,2022:2,2023:1,2024:1},
+  "SEPRELAD":  {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:1,2024:1},
+  "Binacional": {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:0,2024:1},
+  "SEDERREC":  {2014:0,2015:0,2016:0,2017:0,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:5},
+  "Militares": {2014:0,2015:1,2016:1,2017:1,2018:1,2019:0,2020:0,2021:0,2022:2,2023:2,2024:1},
+  "DNM":       {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:2,2024:2},
+
 };
 
-// Dominios (%)
+// 1C — Participación de otros organismos (%)
+const participacion = {2014:28.6,2015:30.9,2016:29.9,2017:30.5,2018:29.2,2019:26.9,2020:23.8,2021:24.3,2022:25.7,2023:28.5,2024:29.5};
+
+// 3A — Dominios (%)
 const dominios = {
-  "Demografía":        {2014:52.3,2015:62.2,2016:70.1,2017:71.7,2018:67.1,2019:66.5,2020:65.6,2021:67.6,2022:62.5,2023:59.5,2024:58.6},
-  "Estad. Económicas": {2014:32.4,2015:34.4,2016:39.0,2017:36.3,2018:39.0,2019:39.8,2020:39.2,2021:39.5,2022:39.8,2023:44.6,2024:45.3},
-  "Medio Ambiente":    {2014:12.9,2015:14.8,2016:11.0,2017:12.2,2018:13.9,2019:13.2,2020:12.6,2021:10.6,2022:11.1,2023:10.0,2024:10.5},
-  "Metodologías":      {2014:2.9,2015:5.8,2016:7.2,2017:8.7,2018:9.2,2019:9.5,2020:8.7,2021:8.6,2022:9.0,2023:8.5,2024:9.7},
+  "Demografía y Sociales": {2014:52.3,2015:62.2,2016:70.1,2017:71.7,2018:67.1,2019:66.5,2020:65.6,2021:67.6,2022:62.5,2023:59.5,2024:57.6},
+  "Estad. Económicas":     {2014:32.4,2015:34.4,2016:39.0,2017:36.3,2018:39.0,2019:39.8,2020:39.2,2021:39.5,2022:39.8,2023:44.6,2024:45.5},
+  "Medio Ambiente":        {2014:12.9,2015:14.8,2016:11.0,2017:12.2,2018:13.9,2019:13.2,2020:12.6,2021:10.6,2022:11.1,2023:10.0,2024:10.6},
+  "Metodologías":          {2014:2.9,2015:5.8,2016:7.2,2017:8.7,2018:9.2,2019:9.5,2020:8.7,2021:8.6,2022:9.0,2023:8.5,2024:9.0},
 };
 
-// Metodología (%)
+// 5A — Metodología (%)
 const metodologia = {
-  "Fuentes Adm.":      {2014:34.0,2015:32.6,2016:30.7,2017:33.4,2018:40.5,2019:44.4,2020:42.8,2021:42.3,2022:42.9,2023:46.2,2024:46.4},
-  "Estadíst. Deriv.":  {2014:26.1,2015:26.5,2016:29.9,2017:26.0,2018:24.9,2019:22.3,2020:26.2,2021:27.1,2022:29.8,2023:26.2,2024:28.5},
-  "Obtención Directa": {2014:36.1,2015:34.7,2016:33.0,2017:30.9,2018:25.4,2019:23.2,2020:20.8,2021:21.3,2022:18.0,2023:19.0,2024:14.9},
-  "Infraestructura":   {2014:2.9,2015:4.1,2016:3.8,2017:5.1,2018:5.5,2019:6.3,2020:6.2,2021:5.8,2022:5.9,2023:6.2,2024:7.2},
-  "Otras":             {2014:0.8,2015:2.1,2016:2.7,2017:4.5,2018:3.8,2019:3.7,2020:4.1,2021:3.5,2022:3.3,2023:2.6,2024:3.0},
+  "Fuentes Admin.":      {2014:34.0,2015:32.6,2016:30.7,2017:33.4,2018:40.5,2019:44.4,2020:42.8,2021:42.3,2022:42.9,2023:46.2,2024:47.5},
+  "Est. Derivadas":      {2014:26.1,2015:26.5,2016:29.9,2017:26.0,2018:24.9,2019:22.3,2020:26.2,2021:27.1,2022:29.8,2023:26.2,2024:28.2},
+  "Obtención Directa":   {2014:36.1,2015:34.7,2016:33.0,2017:30.9,2018:25.4,2019:23.2,2020:20.8,2021:21.3,2022:18.0,2023:19.0,2024:14.2},
+  "Infraestructura":     {2014:2.9,2015:4.1,2016:3.8,2017:5.1,2018:5.5,2019:6.3,2020:6.2,2021:5.8,2022:5.9,2023:6.2,2024:7.2},
+  "Otras":               {2014:0.8,2015:2.1,2016:2.7,2017:4.5,2018:3.8,2019:3.7,2020:4.1,2021:3.5,2022:3.3,2023:2.6,2024:2.8},
 };
 
-// Tipo difusión (%)
+// 9A — Tipo Difusión (%)
 const difusion = {
-  "Difusión Pública":   {2014:70.1,2015:72.9,2016:74.2,2017:78.5,2018:74.0,2019:73.9,2020:74.9,2021:75.9,2022:76.9,2023:72.3,2024:77.1},
-  "Limitada/Petición":  {2014:18.3,2015:13.4,2016:11.0,2017:10.0,2018:14.2,2019:14.3,2020:12.3,2021:9.9,2022:10.5,2023:12.6,2024:9.7},
-  "Uso Interno":        {2014:9.1,2015:13.1,2016:12.9,2017:10.3,2018:10.4,2019:10.3,2020:11.0,2021:11.1,2022:10.3,2023:11.0,2024:9.4},
-  "No Publicada":       {2014:2.5,2015:0.7,2016:1.9,2017:1.3,2018:1.4,2019:1.4,2020:1.8,2021:3.0,2022:2.3,2023:4.1,2024:3.9},
+  "Difusión Pública":  {2014:70.1,2015:72.9,2016:74.2,2017:78.5,2018:74.0,2019:73.9,2020:74.9,2021:75.9,2022:76.9,2023:72.3,2024:74.9},
+  "Limitada/Petición": {2014:18.3,2015:13.4,2016:11.0,2017:10.0,2018:14.2,2019:14.3,2020:12.3,2021:9.9,2022:10.5,2023:12.6,2024:12.1},
+  "Est. Interna":      {2014:9.1,2015:13.1,2016:12.9,2017:10.3,2018:10.4,2019:10.3,2020:11.0,2021:11.1,2022:10.3,2023:11.0,2024:8.8},
+  "No Publicada":      {2014:2.5,2015:0.7,2016:1.9,2017:1.3,2018:1.4,2019:1.4,2020:1.8,2021:3.0,2022:2.3,2023:4.1,2024:4.1},
 };
 
-// Cobertura Geográfica (%)
+// 7B — Cobertura Geográfica (%)
 const cobertura = {
-  "Nacional":     {2014:88.0,2015:89.0,2016:89.8,2017:87.1,2018:86.7,2019:85.7,2020:87.4,2021:86.6,2022:87.9,2023:84.6,2024:87.3},
-  "Departamental":{2014:1.2,2015:0.3,2016:0.4,2017:0.6,2018:0.9,2019:2.3,2020:1.5,2021:2.8,2022:1.5,2023:3.8,2024:3.6},
-  "Otras":        {2014:6.6,2015:6.2,2016:4.9,2017:5.5,2018:4.6,2019:4.9,2020:4.6,2021:4.8,2022:4.9,2023:4.9,2024:3.3},
-  "No Aplica":    {2014:0.8,2015:2.7,2016:3.4,2017:5.1,2018:5.2,2019:4.3,2020:3.6,2021:3.5,2022:3.6,2023:4.4,2024:3.6},
+  "Nacional":      {2014:88.0,2015:89.0,2016:89.8,2017:87.1,2018:86.7,2019:85.4,2020:87.4,2021:86.6,2022:87.9,2023:84.6,2024:87.1},
+  "Departamental": {2014:1.2,2015:0.3,2016:0.4,2017:0.6,2018:0.9,2019:2.6,2020:1.5,2021:2.8,2022:1.5,2023:3.8,2024:3.4},
+  "Asunción/AMC":  {2014:2.5,2015:1.7,2016:1.5,2017:1.6,2018:2.6,2019:2.6,2020:2.3,2021:2.0,2022:1.5,2023:1.8,2024:1.6},
+  "Otras":         {2014:6.6,2015:6.2,2016:4.9,2017:5.5,2018:4.6,2019:4.9,2020:4.6,2021:4.8,2022:4.9,2023:4.9,2024:4.1},
+  "No Aplica":     {2014:0.8,2015:2.7,2016:3.4,2017:5.1,2018:5.2,2019:4.3,2020:3.6,2021:3.5,2022:3.6,2023:4.4,2024:3.4},
 };
 
-// Formas difusión pública — SELECCIÓN MÚLTIPLE (%)
+// 9B — Formas Difusión Pública (%) — SELECCIÓN MÚLTIPLE
 const formasDif = {
-  "Internet":         {2014:84.0,2015:89.6,2016:94.4,2017:93.0,2018:93.3,2019:94.2,2020:96.6,2021:98.0,2022:98.0,2023:98.6,2024:99.3},
-  "Impresa":          {2014:45.6,2015:43.4,2016:37.8,2017:36.5,2018:33.5,2019:29.5,2020:26.4,2021:26.0,2022:21.7,2023:19.1,2024:19.9},
-  "Soporte Digital":  {2014:36.7,2015:34.4,2016:31.6,2017:25.0,2018:20.1,2019:19.0,2020:17.8,2021:16.3,2022:15.7,2023:13.5,2024:12.7},
+  "Internet":        {2014:84.0,2015:89.6,2016:94.4,2017:93.0,2018:93.3,2019:94.2,2020:96.6,2021:98.0,2022:98.0,2023:98.6,2024:99.3},
+  "Impresa":         {2014:45.6,2015:43.4,2016:37.8,2017:36.5,2018:33.5,2019:29.5,2020:26.4,2021:26.0,2022:26.0,2023:19.1,2024:19.9},
+  "Soporte Digital": {2014:36.7,2015:34.4,2016:31.6,2017:25.0,2018:20.1,2019:19.0,2020:17.8,2021:15.7,2022:16.3,2023:13.5,2024:12.2},
 };
 
-// Periodicidad recolección regular vs irregular (%)
+// 6C — Periodicidad Recolección (%)
 const periRec = {
-  "Regular":   {2014:69.7,2015:70.4,2016:69.3,2017:67.8,2018:71.1,2019:74.8,2020:76.7,2021:78.2,2022:83.0,2023:84.1,2024:86.5},
-  "Irregular": {2014:30.3,2015:29.6,2016:30.7,2017:32.2,2018:28.9,2019:25.2,2020:23.3,2021:21.8,2022:17.0,2023:15.9,2024:13.5},
+  "Regular":   {2014:69.7,2015:70.4,2016:69.3,2017:67.8,2018:71.1,2019:74.8,2020:76.7,2021:78.2,2022:83.0,2023:84.1,2024:87.1},
+  "Irregular": {2014:30.3,2015:29.6,2016:30.7,2017:32.2,2018:28.9,2019:25.2,2020:23.3,2021:21.8,2022:17.0,2023:15.9,2024:12.9},
 };
 
-/* ═══════════════════════════════════════════════
+// 6B — Periodicidad Regular Detalle (%) — SELECCIÓN MÚLTIPLE
+const periDetalle = {
+  "Anual":       {2014:36.9,2015:37.6,2016:37.2,2017:37.9,2018:40.2,2019:42.9,2020:42.8,2021:41.4,2022:42.4,2023:47.6,2024:48.1},
+  "Mensual":     {2014:36.3,2015:32.7,2016:39.3,2017:36.5,2018:36.2,2019:42.5,2020:43.1,2021:43.7,2022:41.8,2023:46.3,2024:45.1},
+  "Diaria":      {2014:9.5,2015:10.7,2016:10.9,2017:13.7,2018:16.7,2019:19.5,2020:18.4,2021:19.7,2022:21.1,2023:22.6,2024:23.1},
+  "Decenal":     {2014:14.3,2015:14.6,2016:13.1,2017:11.4,2018:9.8,2019:9.2,2020:7.7,2021:7.4,2022:6.8,2023:2.4,2024:2.7},
+  "Trimestral":  {2014:4.2,2015:4.4,2016:3.8,2017:5.2,2018:5.3,2019:6.1,2020:7.0,2021:7.4,2022:9.9,2023:9.1,2024:8.9},
+  "Semestral":   {2014:1.8,2015:2.0,2016:2.7,2017:1.4,2018:1.6,2019:4.2,2020:5.4,2021:4.9,2022:4.6,2023:8.2,2024:8.9},
+};
+
+// CompA — Forma de Recolección (%) — SELECCIÓN MÚLTIPLE
+const recoleccion = {
+  "Datos Administrativos": {2014:42.6,2015:44.4,2016:43.5,2017:49.5,2018:55.3,2019:59.7,2020:59.7,2021:56.6,2022:62.9,2023:61.8,2024:67.8},
+  "Entrevista Personal":   {2014:40.2,2015:41.3,2016:40.5,2017:39.0,2018:34.2,2019:33.1,2020:28.6,2021:27.1,2022:24.1,2023:24.0,2024:18.8},
+  "CASI":                  {2014:5.3,2015:2.6,2016:6.5,2017:5.0,2018:7.5,2019:10.6,2020:14.9,2021:15.9,2022:19.4,2023:22.4,2024:21.8},
+  "Otros":                 {2014:12.4,2015:10.2,2016:11.3,2017:11.0,2018:13.2,2019:12.3,2020:14.1,2021:16.7,2022:21.1,2023:22.0,2024:22.2},
+  "Entrevista Telefónica": {2014:0.0,2015:1.0,2016:0.6,2017:2.5,2018:2.6,2019:4.7,2020:5.6,2021:5.2,2022:6.8,2023:6.3,2024:6.3},
+  "Correo Postal":         {2014:4.7,2015:5.1,2016:7.7,2017:6.5,2018:5.7,2019:7.2,2020:10.1,2021:9.2,2022:10.5,2023:11.4,2024:8.4},
+};
+
+// 9C — Periodicidad Difusión Pública (%)
+const periDif = {
+  "Regular":        {2014:62.7,2015:63.7,2016:64.3,2017:61.9,2018:63.7,2019:67.4,2020:70.2,2021:74.3,2022:77.9,2023:83.0,2024:84.8},
+  "Irregular":      {2014:36.7,2015:34.9,2016:33.7,2017:29.9,2018:31.3,2019:28.3,2020:25.7,2021:24.3,2022:20.4,2023:16.3,2024:15.2},
+  "No determinada": {2014:0.6,2015:1.4,2016:2.0,2017:8.2,2018:5.1,2019:4.3,2020:4.1,2021:1.3,2022:1.7,2023:0.7,2024:0.0},
+};
+
+// 2B — Tipo de Aporte de Otros Organismos (%)
+const tipoAporte = {
+  "Aporte Financiero":  {2014:62.3,2015:53.3,2016:51.9,2017:48.4,2018:45.5,2019:39.4,2020:35.5,2021:34.4,2022:27.0,2023:24.5,2024:19.3},
+  "Coop. Técnica":      {2014:14.5,2015:26.7,2016:24.1,2017:36.8,2018:35.6,2019:33.0,2020:38.7,2021:38.5,2022:40.0,2023:38.2,2024:35.1},
+  "Recolección":        {2014:17.4,2015:17.8,2016:22.8,2017:16.8,2018:19.8,2019:25.5,2020:29.0,2021:34.4,2022:41.0,2023:43.6,2024:46.5},
+  "Proc. Base de Datos":{2014:13.0,2015:15.6,2016:20.3,2017:20.0,2018:20.8,2019:21.3,2020:18.3,2021:16.7,2022:15.0,2023:17.3,2024:19.3},
+  "Difusión Resultados":{2014:4.3,2015:6.7,2016:11.4,2017:9.5,2018:10.9,2019:11.7,2020:8.6,2021:9.4,2022:10.0,2023:10.0,2024:15.8},
+};
+
+// 8B — Año de Referencia (%)
+const anoRef = {
+  "< 2013":    {2014:38.6,2015:31.8,2016:22.5,2017:18.6,2018:14.7,2019:12.8,2020:10.0,2021:9.4,2022:6.6,2023:0.0,2024:2.2},
+  "2013–2017": {2014:61.4,2015:68.2,2016:77.5,2017:81.4,2018:17.0,2019:8.9,2020:5.9,2021:4.8,2022:2.3,2023:0.0,2024:0.3},
+  "2018–2023": {2014:0.0,2015:0.0,2016:0.0,2017:0.0,2018:68.3,2019:78.3,2020:84.2,2021:85.8,2022:91.1,2023:100.0,2024:15.4},
+  "2024+":     {2014:0.0,2015:0.0,2016:0.0,2017:0.0,2018:0.0,2019:0.0,2020:0.0,2021:0.0,2022:0.0,2023:0.0,2024:82.2},
+};
+
+/* ═══════════════════════════════════════════
    PALETA
-═══════════════════════════════════════════════ */
-const C = {
-  blue:    '#1F72A6',
-  blight:  '#2BA8D9',
-  bbg:     '#E8F4FA',
-  orange:  '#F2913D',
-  ored:    '#F2561D',
-  lgray:   '#E3E7ED',
-  tsec:    '#6B7280',
-};
-const BAR_COLORS = [C.blight, C.blue, C.orange, C.ored, '#5BB5D5', '#8DD3F0', '#FAB87A', '#F67D4A'];
-const DOUGHNUT_COLORS = [C.blue, C.blight, C.orange, C.ored, C.lgray];
+═══════════════════════════════════════════ */
+const C = { blue:'#1F72A6', blight:'#2BA8D9', orange:'#F2913D', ored:'#F2561D', green:'#27AE60', purple:'#8E44AD', teal:'#16A085', lgray:'#B0BEC5' };
+const PALETTE = [C.blue, C.blight, C.orange, C.ored, C.green, C.purple, C.teal, C.lgray];
 
-/* ═══════════════════════════════════════════════
-   STATE — abre en 2014
-═══════════════════════════════════════════════ */
+/* STATE */
 let currentYear = 2014;
 let charts = {};
 
-/* ═══════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════ */
-function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+/* HELPERS */
+function dc(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+function barH(id, labels, data, colors){
+  dc(id);
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx, { type:'bar', data:{
+    labels, datasets:[{data, backgroundColor: colors || PALETTE.slice(0,labels.length), borderRadius:4}]
+  }, options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.parsed.x.toFixed(1)}%`}} },
+    scales:{ x:{grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}}, y:{grid:{display:false},ticks:{font:{size:10}}} }
+  }});
 }
 
-function defaultOpts() {
-  return {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 13, padding: 12 } },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label || ctx.label}: ${Number(ctx.parsed.y ?? ctx.parsed).toFixed(1)}%` } }
-    },
-    scales: {}
-  };
+function barV(id, labels, data, colors){
+  dc(id);
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx, { type:'bar', data:{
+    labels, datasets:[{data, backgroundColor: colors || PALETTE.slice(0,labels.length), borderRadius:5}]
+  }, options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}} },
+    scales:{ y:{grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}}, x:{grid:{display:false},ticks:{font:{size:11}}} }
+  }});
 }
 
-/* ═══════════════════════════════════════════════
+function doughnut(id, labels, data, colors){
+  dc(id);
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx, { type:'doughnut', data:{
+    labels, datasets:[{data, backgroundColor: colors || PALETTE.slice(0,labels.length), borderWidth:2, borderColor:'#fff'}]
+  }, options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{font:{size:10},boxWidth:11,padding:8}},
+      tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed.toFixed(1)}%`}} },
+    cutout:'50%'
+  }});
+}
+
+/* ═══════════════════════════════════════════
    KPIs
-═══════════════════════════════════════════════ */
-function renderKPIs(year) {
-  const prev = YEARS[YEARS.indexOf(year) - 1];
-  const total = totalOE[year];
-  const totalPrev = prev ? totalOE[prev] : null;
-  const diff = totalPrev ? total - totalPrev : null;
-
-  const pubPct = difusion["Difusión Pública"][year];
-  const regPct = periRec["Regular"][year];
-  const natPct = cobertura["Nacional"][year];
-  const internetPct = formasDif["Internet"][year];
-
-  const badge = (v, p) => {
-    if (p === null) return `<span class="badge badge-neutral">—</span>`;
-    const cls = v >= 0 ? 'badge-up' : 'badge-down';
-    return `<span class="badge ${cls}">${v >= 0 ? '▲' : '▼'} ${Math.abs(v)} vs ${p}</span>`;
+═══════════════════════════════════════════ */
+function renderKPIs(y){
+  const prev = YEARS[YEARS.indexOf(y)-1];
+  const total = totalOE[y];
+  const diff = prev ? total - totalOE[prev] : null;
+  const badge = (v,p) => {
+    if(p===null) return `<span class="badge badge-neutral">—</span>`;
+    const cls = v>=0?'badge-up':'badge-down';
+    return `<span class="badge ${cls}">${v>=0?'▲':'▼'} ${Math.abs(v)} vs ${p}</span>`;
   };
-
+  
   document.getElementById('kpiRow').innerHTML = `
-    <div class="kpi">
-      <div class="label">Total OE</div>
-      <div class="value">${total}</div>
-      <div class="sub">Operaciones estadísticas</div>
-      ${badge(diff, prev)}
-    </div>
-    <div class="kpi">
-      <div class="label">Difusión Pública</div>
-      <div class="value">${pubPct.toFixed(1)}%</div>
-      <div class="sub">OE con acceso público</div>
-    </div>
-    <div class="kpi">
-      <div class="label">Recolección Regular</div>
-      <div class="value">${regPct.toFixed(1)}%</div>
-      <div class="sub">OE con periodicidad fija</div>
-    </div>
-    <div class="kpi">
-      <div class="label">Cobertura Nacional</div>
-      <div class="value">${natPct.toFixed(1)}%</div>
-      <div class="sub">Alcance geográfico</div>
-    </div>
-    <div class="kpi">
-      <div class="label">Difusión Internet</div>
-      <div class="value">${internetPct.toFixed(1)}%</div>
-      <div class="sub">Publicación en línea</div>
-    </div>
+    <div class="kpi"><div class="label">Total OE</div><div class="value">${total}</div><div class="sub">Operaciones estadísticas</div>${badge(diff,prev)}</div>
+    <div class="kpi"><div class="label">Difusión Pública</div><div class="value">${difusion["Difusión Pública"][y].toFixed(1)}%</div><div class="sub">OE con acceso público</div></div>
+    <div class="kpi"><div class="label">Recolección Regular</div><div class="value">${periRec["Regular"][y].toFixed(1)}%</div><div class="sub">OE con periodicidad fija</div></div>
+    <div class="kpi"><div class="label">Cobertura Nacional</div><div class="value">${cobertura["Nacional"][y].toFixed(1)}%</div><div class="sub">Alcance geográfico</div></div>
+    <div class="kpi"><div class="label">Difusión Internet</div><div class="value">${formasDif["Internet"][y].toFixed(1)}%</div><div class="sub">Publicación en línea</div></div>
+    <div class="kpi"><div class="label">Part. Otros Org.</div><div class="value">${participacion[y].toFixed(1)}%</div><div class="sub">OE con participación externa</div></div>
   `;
 }
 
-/* ═══════════════════════════════════════════════
-   RANKING TABLE — agrupa organismos con igual N
-═══════════════════════════════════════════════ */
-function renderRanking(year) {
-  const total = totalOE[year];
+/* ═══════════════════════════════════════════
+   RANKING — agrupado por empate
+═══════════════════════════════════════════ */
+function renderRanking(y){
+  const total = totalOE[y];
+  const rows = Object.entries(organismos)
+    .map(([n,d])=>({name:n, n:d[y]||0}))
+    .filter(r=>r.n>0).sort((a,b)=>b.n-a.n);
 
-  // Obtener todos los organismos con sus valores para el año
-  const allRows = Object.entries(organismos)
-    .map(([name, data]) => ({ name, n: data[year] || 0 }))
-    .filter(r => r.n > 0)
-    .sort((a, b) => b.n - a.n);
-
-  // Agrupar por igual N (posiciones empatadas)
-  const groups = [];
-  let i = 0;
-  while (i < allRows.length) {
-    const currentN = allRows[i].n;
-    const group = [];
-    while (i < allRows.length && allRows[i].n === currentN) {
-      group.push(allRows[i].name);
-      i++;
-    }
-    groups.push({ n: currentN, names: group });
+  // Agrupar empates
+  const groups=[];
+  let i=0;
+  while(i<rows.length){
+    const v=rows[i].n; const g=[];
+    while(i<rows.length&&rows[i].n===v){ g.push(rows[i].name); i++; }
+    groups.push({n:v, names:g});
   }
 
-  let html = `<thead><tr>
-    <th>#</th><th>Organismo</th><th>OE</th><th>%</th><th style="width:100px">Proporción</th>
-  </tr></thead><tbody>`;
-
-  let rankPos = 1;
-  let shown = 0;
-  const MAX_ROWS = 14; // máximo de grupos a mostrar
-
-  for (const grp of groups) {
-    if (shown >= MAX_ROWS) break;
-    const pct = (grp.n / total * 100).toFixed(1);
-    const numClass = rankPos === 1 ? 'top1' : rankPos === 2 ? 'top2' : rankPos === 3 ? 'top3' : '';
-
-    // Nombre(s): si hay empate, unir con " – "
-    const namesDisplay = grp.names.join(' – ');
-
-    html += `<tr>
-      <td><span class="rank-num ${numClass}">${rankPos}</span></td>
-      <td class="org-names">${namesDisplay}</td>
-      <td><strong>${grp.n}</strong></td>
-      <td>${pct}%</td>
-      <td><div class="bar-pct" style="width:${Math.min(100, pct * 4)}%"></div></td>
+  let html=`<thead><tr><th>#</th><th>Organismo</th><th>OE</th><th>%</th><th style="width:90px">Barra</th></tr></thead><tbody>`;
+  let rank=1; let shown=0;
+  for(const grp of groups){
+    
+    const pct=(grp.n/total*100).toFixed(1);
+    const nc=rank===1?'top1':rank===2?'top2':rank===3?'top3':'';
+    html+=`<tr>
+      <td><span class="rank-num ${nc}">${rank}</span></td>
+      <td style="font-size:.77rem;line-height:1.4">${grp.names.join(' – ')}</td>
+      <td><strong>${grp.n}</strong></td><td>${pct}%</td>
+      <td><div class="bar-pct" style="width:${Math.min(100,pct*4)}%"></div></td>
     </tr>`;
-
-    rankPos += grp.names.length; // la siguiente posición salta por cantidad de empatados
-    shown++;
+    rank+=grp.names.length; shown++;
   }
-  html += '</tbody>';
-  document.getElementById('rankTable').innerHTML = html;
+  html+='</tbody>';
+  document.getElementById('rankTable').innerHTML=html;
 }
 
-/* ═══════════════════════════════════════════════
-   CHART: DOMINIOS — Bar horizontal (selección múltiple)
-═══════════════════════════════════════════════ */
-function renderDominio(year) {
-  destroyChart('chartDominio');
-  const ctx = document.getElementById('chartDominio').getContext('2d');
-  const labels = Object.keys(dominios);
-  const data = labels.map(k => dominios[k][year]);
-  charts['chartDominio'] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{ data, backgroundColor: DOUGHNUT_COLORS.slice(0, labels.length), borderRadius: 5 }]
-    },
-    options: {
-      ...defaultOpts(),
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)}%` } }
-      },
-      scales: {
-        x: { grid: { color: '#eee' }, ticks: { callback: v => v + '%', font: { size: 10 } } },
-        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
-      }
-    }
-  });
+/* ═══════════════════════════════════════════
+   CHARTS AÑO
+═══════════════════════════════════════════ */
+function renderDominio(y){
+  const labs=Object.keys(dominios), data=labs.map(k=>dominios[k][y]);
+  barH('chartDominio',labs,data);
 }
 
-/* ═══════════════════════════════════════════════
-   CHART: METODOLOGÍA — Bar horizontal
-═══════════════════════════════════════════════ */
-function renderMetodologia(year) {
-  destroyChart('chartMetod');
-  const ctx = document.getElementById('chartMetod').getContext('2d');
-  const labels = Object.keys(metodologia);
-  const data = labels.map(k => metodologia[k][year]);
-  charts['chartMetod'] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels.map(l => l.length > 16 ? l.substring(0,16)+'…' : l),
-      datasets: [{ data, backgroundColor: BAR_COLORS.slice(0, labels.length), borderRadius: 5 }]
-    },
-    options: {
-      ...defaultOpts(),
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)}%` } }
-      },
-      scales: {
-        x: { grid: { color: '#eee' }, ticks: { callback: v => v + '%', font: { size: 10 } } },
-        y: { grid: { display: false }, ticks: { font: { size: 10 } } }
-      }
-    }
-  });
+function renderMetodologia(y){
+  const labs=Object.keys(metodologia), data=labs.map(k=>metodologia[k][y]);
+  barH('chartMetod',labs,data);
 }
 
-/* ═══════════════════════════════════════════════
-   CHART: TIPO DIFUSIÓN — Doughnut
-═══════════════════════════════════════════════ */
-function renderDifusion(year) {
-  destroyChart('chartDifusion');
-  const ctx = document.getElementById('chartDifusion').getContext('2d');
-  const labels = Object.keys(difusion);
-  const data = labels.map(k => difusion[k][year]);
-  charts['chartDifusion'] = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels,
-      datasets: [{ data, backgroundColor: [C.blue, C.blight, C.orange, C.ored], borderWidth: 2, borderColor: '#fff' }]
-    },
-    options: {
-      ...defaultOpts(),
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 12 } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed.toFixed(1)}%` } }
-      }
-    }
-  });
+function renderDifusion(y){
+  const labs=Object.keys(difusion), data=labs.map(k=>difusion[k][y]);
+  doughnut('chartDifusion',labs,data,[C.blue,C.blight,C.orange,C.ored]);
 }
 
-/* ═══════════════════════════════════════════════
-   CHART: COBERTURA GEOGRÁFICA — Pie
-═══════════════════════════════════════════════ */
-function renderCobertura(year) {
-  destroyChart('chartCobertura');
-  const ctx = document.getElementById('chartCobertura').getContext('2d');
-  const labels = Object.keys(cobertura);
-  const data = labels.map(k => cobertura[k][year]);
-  charts['chartCobertura'] = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels,
-      datasets: [{ data, backgroundColor: [C.blue, C.blight, C.orange, C.lgray], borderWidth: 2, borderColor: '#fff' }]
-    },
-    options: {
-      ...defaultOpts(),
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 12 } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed.toFixed(1)}%` } }
-      }
-    }
-  });
+function renderCobertura(y){
+  const labs=Object.keys(cobertura), data=labs.map(k=>cobertura[k][y]);
+  doughnut('chartCobertura',labs,data,[C.blue,C.blight,C.orange,C.ored,C.lgray]);
 }
 
-/* ═══════════════════════════════════════════════
-   CHART: FORMAS DIFUSIÓN PÚBLICA — Bar (SELECCIÓN MÚLTIPLE)
-═══════════════════════════════════════════════ */
-function renderFormasDif(year) {
-  destroyChart('chartFormasDif');
-  const ctx = document.getElementById('chartFormasDif').getContext('2d');
-  const labels = Object.keys(formasDif);
-  const data = labels.map(k => formasDif[k][year]);
-  charts['chartFormasDif'] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{ label: year.toString(), data, backgroundColor: [C.blue, C.blight, C.orange], borderRadius: 6 }]
-    },
-    options: {
-      ...defaultOpts(),
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(1)}%` } } },
-      scales: {
-        y: { beginAtZero: true, max: 110, grid: { color: '#eee' }, ticks: { callback: v => v + '%', font: { size: 10 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-      }
-    }
-  });
+function renderFormasDif(y){
+  const labs=Object.keys(formasDif), data=labs.map(k=>formasDif[k][y]);
+  barV('chartFormasDif',labs,data,[C.blue,C.blight,C.orange]);
 }
 
-/* ═══════════════════════════════════════════════
-   CHART: PERIODICIDAD — Doughnut
-═══════════════════════════════════════════════ */
-function renderPeriodRec(year) {
-  destroyChart('chartPeriodRec');
-  const ctx = document.getElementById('chartPeriodRec').getContext('2d');
-  charts['chartPeriodRec'] = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Regular', 'Irregular'],
-      datasets: [{
-        data: [periRec['Regular'][year], periRec['Irregular'][year]],
-        backgroundColor: [C.blue, C.ored],
-        borderWidth: 3, borderColor: '#fff'
-      }]
-    },
-    options: {
-      ...defaultOpts(),
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 12 }, boxWidth: 14 } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed.toFixed(1)}%` } }
-      },
-      cutout: '55%'
-    }
-  });
+function renderPeriodRec(y){
+  doughnut('chartPeriodRec',['Regular','Irregular'],[periRec['Regular'][y],periRec['Irregular'][y]],[C.blue,C.ored]);
 }
 
-/* ═══════════════════════════════════════════════
+function renderRecoleccion(y){
+  const labs=Object.keys(recoleccion), data=labs.map(k=>recoleccion[k][y]);
+  barH('chartRecoleccion',labs,data);
+}
+
+function renderPeriodDif(y){
+  const labs=Object.keys(periDif), data=labs.map(k=>periDif[k][y]);
+  doughnut('chartPeriodDif',labs,data,[C.blue,C.orange,C.lgray]);
+}
+
+function renderAporte(y){
+  const labs=Object.keys(tipoAporte), data=labs.map(k=>tipoAporte[k][y]);
+  barH('chartAporte',labs,data);
+}
+
+function renderAnoRef(y){
+  const labs=Object.keys(anoRef), data=labs.map(k=>anoRef[k][y]);
+  doughnut('chartAnoRef',labs,data,[C.lgray,C.blight,C.blue,C.orange]);
+}
+
+function renderPeriodDetalle(y){
+  dc('chartPeriodDetalle');
+  const labs=Object.keys(periDetalle), data=labs.map(k=>periDetalle[k][y]);
+  const ctx=document.getElementById('chartPeriodDetalle').getContext('2d');
+  charts['chartPeriodDetalle']=new Chart(ctx,{type:'bar',data:{
+    labels:labs, datasets:[{data,backgroundColor:PALETTE.slice(0,labs.length),borderRadius:5}]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}},
+    scales:{y:{grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:11}}}}
+  }});
+}
+
+/* ═══════════════════════════════════════════
    TREND CHARTS
-═══════════════════════════════════════════════ */
-function trendOpts(minY, maxY) {
-  return {
-    responsive: true, maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 14 } },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${typeof ctx.parsed.y === 'number' ? ctx.parsed.y.toFixed(1) : ctx.parsed.y}` } }
-    },
-    scales: {
-      y: { min: minY, max: maxY, grid: { color: '#eee' }, ticks: { font: { size: 10 }, callback: v => v + '%' } },
-      x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } }
+═══════════════════════════════════════════ */
+function lineOpts(minY,maxY,pct=true){
+  return { responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:13,padding:12}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}${pct?'%':''}`}}},
+    scales:{
+      y:{min:minY,max:maxY,grid:{color:'#eee'},ticks:{font:{size:10},callback:v=>v+(pct?'%':'')}},
+      x:{grid:{color:'#f0f0f0'},ticks:{font:{size:11}}}
     }
   };
 }
 
-function renderTrendCharts() {
-  const labelsY = YEARS.map(String);
-
-  destroyChart('chartTrend1');
-  charts['chartTrend1'] = new Chart(document.getElementById('chartTrend1').getContext('2d'), {
-    type: 'line',
-    data: { labels: labelsY, datasets: [
-      { label: 'Difusión Pública (%)', data: YEARS.map(y => difusion['Difusión Pública'][y]),
-        borderColor: C.blue, backgroundColor: C.blue+'18', borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: C.blue, fill: true, tension: 0.3 },
-      { label: 'Recolección Regular (%)', data: YEARS.map(y => periRec['Regular'][y]),
-        borderColor: C.blight, backgroundColor: C.blight+'18', borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: C.blight, fill: true, tension: 0.3 },
-      { label: 'Cobertura Nacional (%)', data: YEARS.map(y => cobertura['Nacional'][y]),
-        borderColor: C.orange, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 4, pointBackgroundColor: C.orange, fill: false, tension: 0.3, borderDash: [6,3] },
-      { label: 'Difusión Internet (%)', data: YEARS.map(y => formasDif['Internet'][y]),
-        borderColor: C.ored, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 4, pointBackgroundColor: C.ored, fill: false, tension: 0.3, borderDash: [3,3] },
-    ]},
-    options: trendOpts(50, 108)
-  });
-
-  destroyChart('chartTrend2');
-  charts['chartTrend2'] = new Chart(document.getElementById('chartTrend2').getContext('2d'), {
-    type: 'line',
-    data: { labels: labelsY, datasets: [
-      { label: 'Fuentes Administrativas', data: YEARS.map(y => metodologia['Fuentes Adm.'][y]),
-        borderColor: C.blue, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: C.blue, fill: false, tension: 0.3 },
-      { label: 'Obtención Directa', data: YEARS.map(y => metodologia['Obtención Directa'][y]),
-        borderColor: C.ored, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: C.ored, fill: false, tension: 0.3 },
-      { label: 'Estadíst. Derivadas', data: YEARS.map(y => metodologia['Estadíst. Deriv.'][y]),
-        borderColor: C.blight, borderWidth: 2, pointRadius: 3, pointBackgroundColor: C.blight, fill: false, tension: 0.3, borderDash: [5,3] },
-      { label: 'Infraestructura', data: YEARS.map(y => metodologia['Infraestructura'][y]),
-        borderColor: C.orange, borderWidth: 2, pointRadius: 3, pointBackgroundColor: C.orange, fill: false, tension: 0.3, borderDash: [3,3] },
-    ]},
-    options: trendOpts(0, 55)
-  });
-
-  destroyChart('chartTrend3');
-  charts['chartTrend3'] = new Chart(document.getElementById('chartTrend3').getContext('2d'), {
-    type: 'line',
-    data: { labels: labelsY, datasets: [
-      { label: 'Demografía', data: YEARS.map(y => dominios['Demografía'][y]),
-        borderColor: C.blue, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: C.blue, fill: false, tension: 0.3 },
-      { label: 'Estad. Económicas', data: YEARS.map(y => dominios['Estad. Económicas'][y]),
-        borderColor: C.orange, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: C.orange, fill: false, tension: 0.3 },
-      { label: 'Medio Ambiente', data: YEARS.map(y => dominios['Medio Ambiente'][y]),
-        borderColor: C.blight, borderWidth: 2, pointRadius: 3, pointBackgroundColor: C.blight, fill: false, tension: 0.3, borderDash: [5,3] },
-      { label: 'Metodologías', data: YEARS.map(y => dominios['Metodologías'][y]),
-        borderColor: C.ored, borderWidth: 2, pointRadius: 3, pointBackgroundColor: C.ored, fill: false, tension: 0.3, borderDash: [3,3] },
-    ]},
-    options: trendOpts(0, 90)
-  });
-
-  destroyChart('chartTrend4');
-  charts['chartTrend4'] = new Chart(document.getElementById('chartTrend4').getContext('2d'), {
-    type: 'bar',
-    data: { labels: labelsY, datasets: [{
-      label: 'Total OE', data: YEARS.map(y => totalOE[y]),
-      backgroundColor: YEARS.map(y => y === currentYear ? C.orange : C.blight),
-      borderRadius: 6,
-    }]},
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Total OE: ${ctx.parsed.y}` } } },
-      scales: {
-        y: { beginAtZero: false, min: 200, grid: { color: '#eee' }, ticks: { font: { size: 10 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-      }
-    }
-  });
-
-  destroyChart('chartTrend5');
-  const top5 = ['INE','MSPyBS','BCP','MTESS','MOPC'];
-  const t5colors = [C.blue, C.blight, C.orange, C.ored, '#5BB5D5'];
-  charts['chartTrend5'] = new Chart(document.getElementById('chartTrend5').getContext('2d'), {
-    type: 'line',
-    data: { labels: labelsY, datasets: top5.map((org, i) => ({
-      label: org, data: YEARS.map(y => organismos[org][y] || 0),
-      borderColor: t5colors[i], borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: t5colors[i], fill: false, tension: 0.3,
-    }))},
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 14 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}` } } },
-      scales: {
-        y: { min: 0, max: 100, grid: { color: '#eee' }, ticks: { font: { size: 10 } } },
-        x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 } } }
-      }
-    }
-  });
+function mkLine(id,datasets,minY,maxY,pct=true){
+  dc(id);
+  const ctx=document.getElementById(id).getContext('2d');
+  const YL=YEARS.map(String);
+  charts[id]=new Chart(ctx,{type:'line',data:{labels:YL,datasets},options:lineOpts(minY,maxY,pct)});
 }
 
-/* ═══════════════════════════════════════════════
-   TAB SWITCHING
-   FIX: los botones de año siempre quedan clicables.
-   Al hacer clic en un año desde la vista Tendencias,
-   primero cambia a 'year' y luego renderiza.
-═══════════════════════════════════════════════ */
-let currentTab = 'year';
-let trendRendered = false;
-
-function setTab(tab) {
-  currentTab = tab;
-  document.getElementById('viewYear').style.display  = tab === 'year'  ? 'block' : 'none';
-  document.getElementById('viewTrend').style.display = tab === 'trend' ? 'block' : 'none';
-  document.getElementById('btnTrend').classList.toggle('active', tab === 'trend');
-
-  // Atenuar visualmente los botones de año cuando estamos en Tendencias,
-  // PERO nunca bloquear pointer-events — siempre son clicables
-  document.querySelectorAll('.year-btn').forEach(b => {
-    b.classList.toggle('dimmed', tab === 'trend');
-  });
-
-  if (tab === 'trend' && !trendRendered) {
-    trendRendered = true;
-    setTimeout(renderTrendCharts, 50);
-  }
+function ds(label,key,obj,color,dash=false){
+  return {label,data:YEARS.map(y=>obj[key][y]),borderColor:color,backgroundColor:color+'15',
+    borderWidth:2.5,pointRadius:4,pointBackgroundColor:color,fill:false,tension:0.3,
+    ...(dash?{borderDash:[5,3]}:{})};
 }
 
-/* ═══════════════════════════════════════════════
-   YEAR BUTTONS
-═══════════════════════════════════════════════ */
-function renderYearBtns() {
-  const container = document.getElementById('yearBtns');
-  container.innerHTML = YEARS.map(y =>
-    `<button class="year-btn ${y === currentYear ? 'active' : ''}" onclick="setYear(${y})">${y}</button>`
+function renderTrendCharts(){
+  const YL=YEARS.map(String);
+
+  // Total OE
+  dc('chartTrend4');
+  const ctx4=document.getElementById('chartTrend4').getContext('2d');
+  charts['chartTrend4']=new Chart(ctx4,{type:'bar',data:{labels:YL,datasets:[{
+    label:'Total OE',data:YEARS.map(y=>totalOE[y]),
+    backgroundColor:YEARS.map(y=>y===2024?C.orange:C.blight),borderRadius:6
+  }]},options:{responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` Total OE: ${c.parsed.y}`}}},
+    scales:{y:{min:200,grid:{color:'#eee'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:11}}}}
+  }});
+
+  // Difusión + Recolección
+  mkLine('chartTrend1',[
+    {label:'Difusión Pública (%)',data:YEARS.map(y=>difusion['Difusión Pública'][y]),borderColor:C.blue,backgroundColor:C.blue+'18',borderWidth:2.5,pointRadius:4,pointBackgroundColor:C.blue,fill:true,tension:0.3},
+    {label:'Recolección Regular (%)',data:YEARS.map(y=>periRec['Regular'][y]),borderColor:C.blight,backgroundColor:C.blight+'18',borderWidth:2.5,pointRadius:4,pointBackgroundColor:C.blight,fill:true,tension:0.3},
+    {label:'Difusión Internet (%)',data:YEARS.map(y=>formasDif['Internet'][y]),borderColor:C.ored,backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:C.ored,fill:false,tension:0.3,borderDash:[3,3]},
+    {label:'Part. Otros Org. (%)',data:YEARS.map(y=>participacion[y]),borderColor:C.orange,backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:C.orange,fill:false,tension:0.3,borderDash:[6,3]},
+  ],50,105);
+
+  // Metodologías
+  mkLine('chartTrend2',[
+    ds('Fuentes Administrativas','Fuentes Admin.',metodologia,C.blue),
+    ds('Obtención Directa','Obtención Directa',metodologia,C.ored),
+    ds('Est. Derivadas','Est. Derivadas',metodologia,C.blight,true),
+    ds('Infraestructura','Infraestructura',metodologia,C.orange,true),
+  ],0,55);
+
+  // Dominios
+  mkLine('chartTrend3',[
+    ds('Demografía y Sociales','Demografía y Sociales',dominios,C.blue),
+    ds('Estad. Económicas','Estad. Económicas',dominios,C.orange),
+    ds('Medio Ambiente','Medio Ambiente',dominios,C.blight,true),
+    ds('Metodologías','Metodologías',dominios,C.ored,true),
+  ],0,85);
+
+  // Recolección de Datos
+  mkLine('chartTrend6',[
+    ds('Datos Administrativos','Datos Administrativos',recoleccion,C.blue),
+    ds('Entrevista Personal','Entrevista Personal',recoleccion,C.ored),
+    ds('CASI','CASI',recoleccion,C.blight,true),
+    ds('Correo Postal','Correo Postal',recoleccion,C.orange,true),
+  ],0,75);
+
+  // Top 6 organismos
+  dc('chartTrend5');
+  const top6=['INE','MSPyBS','BCP','MTESS','MOPC','MEF'];
+  const t6c=[C.blue,C.blight,C.orange,C.ored,C.green,C.purple];
+  const ctx5=document.getElementById('chartTrend5').getContext('2d');
+  charts['chartTrend5']=new Chart(ctx5,{type:'line',data:{labels:YL,datasets:top6.map((o,i)=>({
+    label:o,data:YEARS.map(y=>organismos[o][y]||0),borderColor:t6c[i],borderWidth:2.5,
+    pointRadius:4,pointBackgroundColor:t6c[i],fill:false,tension:0.3
+  }))},options:{responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:13,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}`}}},
+    scales:{y:{min:0,max:100,grid:{color:'#eee'},ticks:{font:{size:10}}},x:{grid:{color:'#f0f0f0'},ticks:{font:{size:11}}}}
+  }});
+
+  // Participación otros organismos
+  dc('chartTrend7');
+  const ctx7=document.getElementById('chartTrend7').getContext('2d');
+  charts['chartTrend7']=new Chart(ctx7,{type:'bar',data:{labels:YL,datasets:[{
+    label:'Part. Otros Org. (%)',data:YEARS.map(y=>participacion[y]),
+    backgroundColor:YEARS.map(y=>y===2024?C.orange:C.blight),borderRadius:5
+  }]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y.toFixed(1)}%`}}},
+    scales:{y:{min:15,max:40,grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:11}}}}
+  }});
+
+  // Año de referencia tendencia
+  dc('chartTrend8');
+  const ctx8=document.getElementById('chartTrend8').getContext('2d');
+  const arKeys=Object.keys(anoRef);
+  const arC=[C.lgray,C.blight,C.blue,C.orange];
+  charts['chartTrend8']=new Chart(ctx8,{type:'line',data:{labels:YL,datasets:arKeys.map((k,i)=>({
+    label:k,data:YEARS.map(y=>anoRef[k][y]),borderColor:arC[i],borderWidth:2.5,
+    pointRadius:4,pointBackgroundColor:arC[i],fill:false,tension:0.3
+  }))},options:{responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:13,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}}},
+    scales:{y:{min:0,max:105,grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}},x:{grid:{color:'#f0f0f0'},ticks:{font:{size:11}}}}
+  }});
+}
+
+/* ═══════════════════════════════════════════
+   TAB / YEAR SWITCHING
+═══════════════════════════════════════════ */
+let currentTab='year', trendRendered=false;
+
+function setTab(tab){
+  currentTab=tab;
+  document.getElementById('viewYear').style.display  = tab==='year' ?'block':'none';
+  document.getElementById('viewTrend').style.display = tab==='trend'?'block':'none';
+  document.getElementById('btnTrend').classList.toggle('active',tab==='trend');
+  document.querySelectorAll('.year-btn').forEach(b=>b.classList.toggle('dimmed',tab==='trend'));
+  if(tab==='trend'&&!trendRendered){ trendRendered=true; setTimeout(renderTrendCharts,50); }
+}
+
+function renderYearBtns(){
+  document.getElementById('yearBtns').innerHTML=YEARS.map(y=>
+    `<button class="year-btn ${y===currentYear?'active':''}" onclick="setYear(${y})">${y}</button>`
   ).join('');
 }
 
-function setYear(year) {
-  // Si estamos en tendencias, volver a la vista de año automáticamente
-  if (currentTab === 'trend') {
-    setTab('year');
-  }
-  currentYear = year;
-  renderYearBtns();
-  renderKPIs(year);
-  renderRanking(year);
-  renderDominio(year);
-  renderMetodologia(year);
-  renderDifusion(year);
-  renderCobertura(year);
-  renderFormasDif(year);
-  renderPeriodRec(year);
+function setYear(y){
+  if(currentTab==='trend') setTab('year');
+  currentYear=y; renderYearBtns();
+  renderKPIs(y); renderRanking(y);
+  renderDominio(y); renderMetodologia(y); renderDifusion(y);
+  renderCobertura(y); renderFormasDif(y); renderPeriodRec(y);
+  renderRecoleccion(y); renderPeriodDif(y); renderAporte(y);
+  renderAnoRef(y); renderPeriodDetalle(y);
 }
 
-/* ═══════════════════════════════════════════════
-   INIT — abre en 2014
-═══════════════════════════════════════════════ */
-function init() {
+function init(){
   renderYearBtns();
-  renderKPIs(currentYear);
-  renderRanking(currentYear);
-  renderDominio(currentYear);
-  renderMetodologia(currentYear);
-  renderDifusion(currentYear);
-  renderCobertura(currentYear);
-  renderFormasDif(currentYear);
-  renderPeriodRec(currentYear);
+  setYear(currentYear);
 }
 
-window.addEventListener('load', init);
+window.addEventListener('load',init);
 </script>
 </body>
 </html>

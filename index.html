@@ -31,10 +31,6 @@
   .header h1 { font-size: 1.25rem; font-weight: 700; }
   .header p  { font-size: .8rem; opacity: .85; margin-top: 2px; }
   .header-right { font-size: .75rem; opacity: .8; text-align: right; line-height: 1.5; }
-  .nota-prelim {
-    background: #fff8e1; border-left: 4px solid var(--orange); color: #7c5200;
-    font-size: .75rem; padding: 7px 16px; letter-spacing: .1px;
-  }
 
   /* TAB BAR */
   .tab-bar {
@@ -74,7 +70,6 @@
   .badge-up      { background: #e0f4fa; color: var(--blue-main); }
   .badge-down    { background: #fdecea; color: var(--orange-strong); }
   .badge-neutral { background: #f0f0f0; color: var(--text-sec); }
-  .badge-warn    { background: #fff3cd; color: #7c5200; }
 
   /* CARDS */
   .chart-card { background: var(--white); border-radius: 10px; box-shadow: 0 1px 5px rgba(0,0,0,.07); overflow: hidden; }
@@ -115,9 +110,6 @@
 
   /* FOOTER */
   .footer { text-align: center; padding: 18px; font-size: .7rem; color: var(--text-sec); }
-
-  /* SECTION GROUP LABEL */
-  .sec-group { font-size: .7rem; font-weight: 700; color: var(--blue-main); text-transform: uppercase; letter-spacing: .6px; border-left: 3px solid var(--blue-light); padding-left: 8px; margin-bottom: -8px; }
 </style>
 </head>
 <body>
@@ -127,7 +119,7 @@
     <h1>📊 Inventario de Operaciones Estadísticas (IOE)</h1>
     <p>Instituto Nacional de Estadística — Paraguay | Serie 2014–2024</p>
   </div>
-  <div class="header-right">Fuente: INE — IOE 2014-2024<br>Actualizado: 2025</div>
+  <div class="header-right">Fuente: INE — IOE 2014-2024<br>Actualizado: Octubre 2026</div>
 </div>
 
 <!-- TAB BAR -->
@@ -158,7 +150,7 @@
   <!-- FILA 2: Metodología + Difusión + Cobertura -->
   <div class="grid-3">
     <div class="chart-card">
-      <div class="section-title">🔬 Metodología (%) <span class="multi-note">⚠ Sel. múltiple</span></div>
+      <div class="section-title">🔬 Metodología (%)</div>
       <div class="chart-body"><div class="chart-wrap-sm"><canvas id="chartMetod"></canvas></div></div>
     </div>
     <div class="chart-card">
@@ -222,11 +214,10 @@
 
   <div class="kpi-row">
     <div class="kpi"><div class="label">Total OE 2024</div><div class="value">395</div><div class="sub">vs 241 en 2014</div><span class="badge badge-up">▲ +64%</span></div>
-    
-    <div class="kpi"><div class="label">Difusión Pública</div><div class="value">70→75%</div><div class="sub">Tendencia positiva</div><span class="badge badge-up">▲ tendencia</span></div>
-    <div class="kpi"><div class="label">Recolección Regular</div><div class="value">70→87%</div><div class="sub">Mayor formalización</div><span class="badge badge-up">▲ +17 pp</span></div>
-    <div class="kpi"><div class="label">Fuentes Admin.</div><div class="value">34→48%</div><div class="sub">Metodología dominante</div><span class="badge badge-up">▲ +14 pp</span></div>
-    <div class="kpi"><div class="label">Obtención Directa</div><div class="value">36→14%</div><div class="sub">En declive sostenido</div><span class="badge badge-down">▼ -22 pp</span></div>
+    <div class="kpi"><div class="label">Difusión Pública</div><div class="value">70.1→74.7%</div><div class="sub">Tendencia positiva</div><span class="badge badge-up">▲ +4.6 pp</span></div>
+    <div class="kpi"><div class="label">Recolección Regular</div><div class="value">69.7→87.3%</div><div class="sub">Mayor formalización</div><span class="badge badge-up">▲ +17.6 pp</span></div>
+    <div class="kpi"><div class="label">Fuentes Admin.</div><div class="value">34.0→47.1%</div><div class="sub">Metodología dominante</div><span class="badge badge-up">▲ +13.1 pp</span></div>
+    <div class="kpi"><div class="label">Obtención Directa</div><div class="value">36.1→14.7%</div><div class="sub">En declive sostenido</div><span class="badge badge-down">▼ -21.4 pp</span></div>
   </div>
 
   <div class="trend-card">
@@ -256,7 +247,7 @@
   </div>
 
   <div class="trend-card">
-    <div class="section-title">🏢 Tendencia — Top 6 Organismos (OE absolutas 2014–2024)</div>
+    <div class="section-title">🏢 Tendencia — Top Organismos (OE absolutas 2014–2024)</div>
     <div class="trend-body"><div style="position:relative;height:290px"><canvas id="chartTrend5"></canvas></div></div>
   </div>
 
@@ -278,181 +269,178 @@
 
 <script>
 /* ═══════════════════════════════════════════
-   DATOS — extraídos directamente del Excel
+   DATOS — Consolidados IOE INE Paraguay 2014–2024
 ═══════════════════════════════════════════ */
 const YEARS = [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
 
 // 1A — Total OE
 const totalOE = {2014:241,2015:291,2016:264,2017:311,2018:346,2019:349,2020:390,2021:395,2022:389,2023:390,2024:395};
 
-// 1B — Organismos (OE absolutas) — fuente: Excel 1B_OE_Organismo
+// 1B — Organismos (OE absolutas)
 const organismos = {
-  "INE":       {2014:75,2015:85,2016:72,2017:74,2018:74,2019:68,2020:71,2021:78,2022:65,2023:54,2024:42},
   "MSPyBS":    {2014:34,2015:45,2016:38,2017:50,2018:50,2019:45,2020:41,2021:43,2022:47,2023:41,2024:45},
+  "INE":       {2014:75,2015:85,2016:72,2017:74,2018:74,2019:68,2020:71,2021:78,2022:65,2023:54,2024:42},
   "BCP":       {2014:26,2015:27,2016:27,2017:27,2018:27,2019:29,2020:29,2021:37,2022:36,2023:38,2024:39},
+  "MOPC":      {2014:7, 2015:8, 2016:10,2017:9, 2018:17,2019:17,2020:17,2021:17,2022:22,2023:22,2024:25},
+  "MTESS":     {2014:2, 2015:5, 2016:7, 2017:10,2018:13,2019:14,2020:28,2021:24,2022:26,2023:22,2024:25},
+  "MEF":       {2014:7, 2015:8, 2016:10,2017:8, 2018:11,2019:11,2020:31,2021:25,2022:26,2023:24,2024:22},
   "UNA":       {2014:11,2015:14,2016:13,2017:15,2018:12,2019:12,2020:13,2021:13,2022:13,2023:13,2024:15},
-  "MEC":       {2014:9,2015:9,2016:10,2017:7,2018:1,2019:0,2020:2,2021:2,2022:2,2023:2,2024:2},
-  "MEF":       {2014:7,2015:8,2016:10,2017:11,2018:11,2019:11,2020:31,2021:28,2022:26,2023:24,2024:22},
-  "MOPC":      {2014:7,2015:8,2016:10,2017:9,2018:17,2019:17,2020:17,2021:17,2022:22,2023:22,2024:25},
-  "INFONA":    {2014:7,2015:10,2016:10,2017:10,2018:10,2019:10,2020:10,2021:10,2022:10,2023:0,2024:9},
-  "MADES":     {2014:7,2015:7,2016:0,2017:0,2018:6,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
-  "MDI":       {2014:6,2015:5,2016:5,2017:9,2018:8,2019:8,2020:8,2021:6,2022:6,2023:5,2024:4},
-  "SENACSA":   {2014:5,2015:5,2016:5,2017:5,2018:5,2019:7,2020:7,2021:6,2022:6,2023:6,2024:10},
-  "SENATUR":   {2014:4,2015:4,2016:4,2017:6,2018:8,2019:8,2020:7,2021:7,2022:7,2023:6,2024:5},
-  "DINAC":     {2014:3,2015:3,2016:4,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:5,2024:5},
-  "CSJ":       {2014:3,2015:3,2016:4,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "ANDE":      {2014:3,2015:3,2016:3,2017:3,2018:3,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "MAG":       {2014:3,2015:3,2016:3,2017:3,2018:3,2019:3,2020:3,2021:3,2022:3,2023:3,2024:3},
-  "IPS":       {2014:3,2015:3,2016:3,2017:1,2018:1,2019:1,2020:3,2021:3,2022:3,2023:3,2024:3},
-  "MTESS":     {2014:2,2015:5,2016:7,2017:10,2018:13,2019:14,2020:28,2021:24,2022:26,2023:22,2024:25},
-  "SNC":       {2014:2,2015:3,2016:0,2017:6,2018:6,2019:6,2020:7,2021:7,2022:8,2023:5,2024:5},
-  "DNIT":      {2014:2,2015:2,2016:0,2017:4,2018:4,2019:4,2020:4,2021:4,2022:4,2023:13,2024:13},
-  "TSJE":      {2014:2,2015:4,2016:4,2017:4,2018:5,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
-  "MIC":       {2014:2,2015:4,2016:2,2017:5,2018:5,2019:3,2020:4,2021:2,2022:5,2023:9,2024:8},
-  "MINMUJER":  {2014:2,2015:2,2016:0,2017:2,2018:7,2019:7,2020:7,2021:2,2022:2,2023:7,2024:7},
-  "MJ":        {2014:2,2015:3,2016:4,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:4,2024:4},
-  "ANNP":      {2014:2,2015:2,2016:2,2017:2,2018:3,2019:3,2020:3,2021:3,2022:2,2023:2,2024:2},
-  "MP":        {2014:2,2015:2,2016:2,2017:2,2018:0,2019:1,2020:2,2021:3,2022:3,2023:3,2024:3},
-  "SENAVE":    {2014:2,2015:2,2016:2,2017:3,2018:3,2019:2,2020:2,2021:1,2022:1,2023:2,2024:1},
-  "CONATEL":   {2014:2,2015:2,2016:0,2017:2,2018:2,2019:2,2020:2,2021:2,2022:2,2023:3,2024:3},
-  "CONACYT":   {2014:1,2015:0,2016:3,2017:3,2018:3,2019:3,2020:3,2021:4,2022:4,2023:4,2024:3},
-  "ESSAP":     {2014:1,2015:0,2016:2,2017:2,2018:3,2019:3,2020:3,2021:3,2022:3,2023:3,2024:3},
-  "MDS":       {2014:1,2015:2,2016:2,2017:2,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "DINACOPA":  {2014:1,2015:1,2016:1,2017:0,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "COPACO":    {2014:1,2015:1,2016:1,2017:0,2018:1,2019:1,2020:1,2021:0,2022:1,2023:1,2024:1},
-  "MDN":       {2014:1,2015:0,2016:0,2017:0,2018:1,2019:0,2020:0,2021:0,2022:1,2023:0,2024:0},
-  "MDP":       {2014:0,2015:0,2016:0,2017:0,2018:0,2019:3,2020:3,2021:7,2022:8,2023:9,2024:9},
-  "INCOOP":    {2014:0,2015:0,2016:0,2017:0,2018:5,2019:5,2020:5,2021:5,2022:5,2023:5,2024:5},
-  "SEDECO":    {2014:0,2015:0,2016:1,2017:3,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "MUVH":      {2014:0,2015:0,2016:0,2017:1,2018:1,2019:7,2020:4,2021:4,2022:4,2023:4,2024:4},
-  "INDERT":    {2014:0,2015:0,2016:0,2017:0,2018:1,2019:1,2020:1,2021:4,2022:0,2023:4,2024:4},
-  "SENAD":     {2014:0,2015:5,2016:6,2017:7,2018:8,2019:8,2020:8,2021:8,2022:7,2023:3,2024:0},
-  "Congreso":  {2014:0,2015:0,2016:0,2017:0,2018:6,2019:6,2020:6,2021:6,2022:6,2023:6,2024:6},
-  "MITIC":     {2014:0,2015:1,2016:0,2017:4,2018:4,2019:4,2020:3,2021:2,2022:0,2023:3,2024:0},
-  "IPTA":      {2014:0,2015:0,2016:0,2017:2,2018:2,2019:2,2020:2,2021:2,2022:2,2023:1,2024:1},
-  "DINATRAN":  {2014:0,2015:2,2016:2,2017:2,2018:1,2019:1,2020:1,2021:0,2022:1,2023:1,2024:1},
-  "ERSSAN":    {2014:0,2015:2,2016:0,2017:2,2018:0,2019:2,2020:2,2021:0,2022:2,2023:0,2024:2},
-  "SENADIS":   {2014:0,2015:1,2016:0,2017:1,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "SEN":       {2014:0,2015:1,2016:0,2017:1,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "MINNA":     {2014:0,2015:1,2016:1,2017:0,2018:0,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "FEPASA":    {2014:0,2015:0,2016:0,2017:0,2018:1,2019:1,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "PETROPAR":  {2014:0,2015:0,2016:0,2017:0,2018:1,2019:0,2020:1,2021:1,2022:1,2023:1,2024:1},
-  "DNCP":      {2014:0,2015:0,2016:0,2017:0,2018:0,2019:1,2020:1,2021:1,2022:1,2023:2,2024:2},
-  "INDI":      {2014:0,2015:0,2016:0,2017:0,2018:0,2019:1,2020:1,2021:1,2022:1,2023:1,2024:2},
-  "SND":       {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:3,2021:3,2022:0,2023:3,2024:3},
-  "ANTSV":     {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:4,2024:4},
-  "Senadores": {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:2,2022:0,2023:4,2024:4},
-  "Social":    {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:1,2021:1,2022:2,2023:1,2024:1},
-  "SEPRELAD":  {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:1,2024:1},
-  "Binacional": {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:0,2024:1},
-  "SEDERREC":  {2014:0,2015:0,2016:0,2017:0,2018:4,2019:4,2020:4,2021:4,2022:4,2023:4,2024:5},
-  "Militares": {2014:0,2015:1,2016:1,2017:1,2018:1,2019:0,2020:0,2021:0,2022:2,2023:2,2024:2},
-  "DNM":       {2014:0,2015:0,2016:0,2017:0,2018:0,2019:0,2020:0,2021:0,2022:0,2023:2,2024:2},
-
+  "DNIT":      {2014:2, 2015:2, 2016:0, 2017:4, 2018:4, 2019:4, 2020:4, 2021:4, 2022:4, 2023:13,2024:13},
+  "SENACSA":   {2014:5, 2015:5, 2016:5, 2017:5, 2018:5, 2019:7, 2020:7, 2021:6, 2022:6, 2023:6, 2024:10},
+  "INFONA":    {2014:7, 2015:10,2016:10,2017:10,2018:10,2019:10,2020:10,2021:10,2022:10,2023:0, 2024:9},
+  "MDP":       {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:3, 2020:3, 2021:7, 2022:8, 2023:9, 2024:9},
+  "MIC":       {2014:2, 2015:4, 2016:2, 2017:5, 2018:5, 2019:3, 2020:4, 2021:2, 2022:5, 2023:9, 2024:8},
+  "MINMUJER":  {2014:2, 2015:2, 2016:0, 2017:2, 2018:7, 2019:7, 2020:7, 2021:2, 2022:2, 2023:7, 2024:7},
+  "Congreso":  {2014:0, 2015:0, 2016:0, 2017:0, 2018:6, 2019:6, 2020:6, 2021:6, 2022:6, 2023:6, 2024:6},
+  "MADES":     {2014:7, 2015:7, 2016:0, 2017:0, 2018:6, 2019:5, 2020:5, 2021:5, 2022:5, 2023:5, 2024:5},
+  "SNC":       {2014:2, 2015:3, 2016:0, 2017:6, 2018:6, 2019:6, 2020:7, 2021:7, 2022:8, 2023:5, 2024:5},
+  "SENATUR":   {2014:4, 2015:4, 2016:4, 2017:6, 2018:8, 2019:8, 2020:7, 2021:7, 2022:7, 2023:6, 2024:5},
+  "TSJE":      {2014:2, 2015:4, 2016:4, 2017:4, 2018:5, 2019:5, 2020:5, 2021:5, 2022:5, 2023:5, 2024:5},
+  "INCOOP":    {2014:0, 2015:0, 2016:0, 2017:0, 2018:5, 2019:5, 2020:5, 2021:5, 2022:5, 2023:5, 2024:5},
+  "SEDERREC":  {2014:0, 2015:0, 2016:0, 2017:0, 2018:4, 2019:4, 2020:4, 2021:4, 2022:4, 2023:4, 2024:5},
+  "DINAC":     {2014:3, 2015:3, 2016:4, 2017:4, 2018:4, 2019:4, 2020:4, 2021:4, 2022:4, 2023:5, 2024:5},
+  "MDI":       {2014:6, 2015:5, 2016:5, 2017:9, 2018:8, 2019:8, 2020:8, 2021:6, 2022:6, 2023:5, 2024:4},
+  "CSJ":       {2014:3, 2015:3, 2016:4, 2017:4, 2018:4, 2019:4, 2020:4, 2021:4, 2022:4, 2023:4, 2024:4},
+  "ANDE":      {2014:3, 2015:3, 2016:3, 2017:3, 2018:3, 2019:4, 2020:4, 2021:4, 2022:4, 2023:4, 2024:4},
+  "MJ":        {2014:2, 2015:3, 2016:4, 2017:2, 2018:3, 2019:3, 2020:3, 2021:3, 2022:3, 2023:4, 2024:4},
+  "SEDECO":    {2014:0, 2015:0, 2016:1, 2017:3, 2018:4, 2019:4, 2020:4, 2021:4, 2022:4, 2023:4, 2024:4},
+  "MUVH":      {2014:0, 2015:0, 2016:0, 2017:1, 2018:1, 2019:7, 2020:4, 2021:4, 2022:4, 2023:4, 2024:4},
+  "INDERT":    {2014:0, 2015:0, 2016:0, 2017:0, 2018:1, 2019:1, 2020:1, 2021:4, 2022:0, 2023:4, 2024:4},
+  "Senadores": {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:0, 2021:2, 2022:0, 2023:4, 2024:4},
+  "ANTSV":     {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:0, 2021:0, 2022:0, 2023:4, 2024:4},
+  "MAG":       {2014:3, 2015:3, 2016:3, 2017:3, 2018:3, 2019:3, 2020:3, 2021:3, 2022:3, 2023:3, 2024:3},
+  "IPS":       {2014:3, 2015:3, 2016:3, 2017:1, 2018:1, 2019:1, 2020:3, 2021:3, 2022:3, 2023:3, 2024:3},
+  "MP":        {2014:2, 2015:2, 2016:2, 2017:2, 2018:0, 2019:1, 2020:2, 2021:3, 2022:3, 2023:3, 2024:3},
+  "CONATEL":   {2014:2, 2015:2, 2016:0, 2017:2, 2018:2, 2019:2, 2020:2, 2021:2, 2022:2, 2023:3, 2024:3},
+  "CONACYT":   {2014:1, 2015:0, 2016:3, 2017:3, 2018:3, 2019:3, 2020:3, 2021:4, 2022:4, 2023:4, 2024:3},
+  "ESSAP":     {2014:1, 2015:0, 2016:2, 2017:2, 2018:3, 2019:3, 2020:3, 2021:3, 2022:3, 2023:3, 2024:3},
+  "SND":       {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:3, 2021:3, 2022:0, 2023:3, 2024:3},
+  "MEC":       {2014:9, 2015:9, 2016:10,2017:7, 2018:1, 2019:0, 2020:2, 2021:2, 2022:2, 2023:2, 2024:2},
+  "ANNP":      {2014:2, 2015:2, 2016:2, 2017:2, 2018:3, 2019:3, 2020:3, 2021:3, 2022:2, 2023:2, 2024:2},
+  "ERSSAN":    {2014:0, 2015:2, 2016:0, 2017:2, 2018:0, 2019:2, 2020:2, 2021:0, 2022:2, 2023:0, 2024:2},
+  "Militares": {2014:0, 2015:1, 2016:1, 2017:1, 2018:1, 2019:1, 2020:1, 2021:0, 2022:2, 2023:2, 2024:2},
+  "INDI":      {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:2},
+  "DNCP":      {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:1, 2020:1, 2021:1, 2022:1, 2023:2, 2024:2},
+  "DINAMI":    {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:0, 2021:0, 2022:0, 2023:2, 2024:2},
+  "SENAVE":    {2014:2, 2015:2, 2016:2, 2017:3, 2018:3, 2019:2, 2020:2, 2021:1, 2022:1, 2023:2, 2024:1},
+  "MDS":       {2014:1, 2015:2, 2016:2, 2017:2, 2018:1, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "DINACOPA":  {2014:1, 2015:1, 2016:1, 2017:0, 2018:1, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "COPACO":    {2014:1, 2015:1, 2016:1, 2017:0, 2018:1, 2019:1, 2020:1, 2021:0, 2022:1, 2023:1, 2024:1},
+  "IPTA":      {2014:0, 2015:0, 2016:0, 2017:2, 2018:2, 2019:2, 2020:2, 2021:2, 2022:2, 2023:1, 2024:1},
+  "DINATRAN":  {2014:0, 2015:2, 2016:2, 2017:2, 2018:1, 2019:1, 2020:1, 2021:0, 2022:1, 2023:1, 2024:1},
+  "SENADIS":   {2014:0, 2015:1, 2016:0, 2017:1, 2018:1, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "SEN":       {2014:0, 2015:1, 2016:0, 2017:1, 2018:1, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "MINNA":     {2014:0, 2015:1, 2016:1, 2017:0, 2018:0, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "FEPASA":    {2014:0, 2015:0, 2016:0, 2017:0, 2018:1, 2019:1, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "PETROPAR":  {2014:0, 2015:0, 2016:0, 2017:0, 2018:1, 2019:0, 2020:1, 2021:1, 2022:1, 2023:1, 2024:1},
+  "Social":    {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:1, 2021:1, 2022:2, 2023:1, 2024:1},
+  "SEPRELAD":  {2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:0, 2021:0, 2022:0, 2023:1, 2024:1},
+  "Binacional":{2014:0, 2015:0, 2016:0, 2017:0, 2018:0, 2019:0, 2020:0, 2021:0, 2022:0, 2023:0, 2024:1},
+  "SENAD":     {2014:0, 2015:5, 2016:6, 2017:7, 2018:8, 2019:8, 2020:8, 2021:8, 2022:7, 2023:3, 2024:0},
+  "MITIC":     {2014:0, 2015:1, 2016:0, 2017:4, 2018:4, 2019:4, 2020:3, 2021:2, 2022:0, 2023:3, 2024:0},
+  "MDN":       {2014:1, 2015:0, 2016:0, 2017:0, 2018:1, 2019:0, 2020:0, 2021:0, 2022:1, 2023:0, 2024:0}
 };
 
 // 1C — Participación de otros organismos (%)
 const participacion = {2014:28.6,2015:30.9,2016:29.9,2017:30.5,2018:29.2,2019:26.9,2020:23.8,2021:24.3,2022:25.7,2023:28.5,2024:29.4};
 
-// 3A — Dominios (%)
+// 3A — Dominios (%) — Cuadro 3 Oficial INE (Respuestas Múltiples)
 const dominios = {
   "Demografía y Sociales": {2014:52.3,2015:62.2,2016:70.1,2017:71.7,2018:67.1,2019:66.5,2020:65.6,2021:67.6,2022:62.5,2023:59.5,2024:57.2},
   "Estad. Económicas":     {2014:32.4,2015:34.4,2016:39.0,2017:36.3,2018:39.0,2019:39.8,2020:39.2,2021:39.5,2022:39.8,2023:44.6,2024:45.1},
   "Medio Ambiente":        {2014:12.9,2015:14.8,2016:11.0,2017:12.2,2018:13.9,2019:13.2,2020:12.6,2021:10.6,2022:11.1,2023:10.0,2024:11.9},
-  "Metodologías":          {2014:2.9,2015:5.8,2016:7.2,2017:8.7,2018:9.2,2019:9.5,2020:8.7,2021:8.6,2022:9.0,2023:8.5,2024:8.9},
+  "Metodologías":          {2014:2.9, 2015:5.8, 2016:7.2, 2017:8.7, 2018:9.2, 2019:9.5, 2020:8.7, 2021:8.6, 2022:9.0, 2023:8.5, 2024:8.9}
 };
 
-// 5A — Metodología (%)
+// 5A — Metodología (%) — Cuadro 5 Oficial INE
 const metodologia = {
-  "Fuentes Admin.":      {2014:34.0,2015:32.6,2016:30.7,2017:33.4,2018:40.5,2019:44.4,2020:42.8,2021:42.3,2022:42.9,2023:46.2,2024:47.1},
-  "Est. Derivadas":      {2014:26.1,2015:26.5,2016:29.9,2017:26.0,2018:24.9,2019:22.3,2020:26.2,2021:27.1,2022:29.8,2023:26.2,2024:28.4},
-  "Obtención Directa":   {2014:36.1,2015:34.7,2016:33.0,2017:30.9,2018:25.4,2019:23.2,2020:20.8,2021:21.3,2022:18.0,2023:19.0,2024:14.7},
-  "Infraestructura":     {2014:2.9,2015:4.1,2016:3.8,2017:5.1,2018:5.5,2019:6.3,2020:6.2,2021:5.8,2022:5.9,2023:6.2,2024:6.8},
-  "Otras":               {2014:0.8,2015:2.1,2016:2.7,2017:4.5,2018:3.8,2019:3.7,2020:4.1,2021:3.5,2022:3.3,2023:2.6,2024:3.0},
+  "Fuentes Admin.":   {2014:34.0,2015:32.6,2016:30.7,2017:33.4,2018:40.5,2019:44.4,2020:42.8,2021:42.3,2022:42.9,2023:46.2,2024:47.1},
+  "Est. Derivadas":   {2014:26.1,2015:26.5,2016:29.9,2017:26.0,2018:24.9,2019:22.3,2020:26.2,2021:27.1,2022:29.8,2023:26.2,2024:28.4},
+  "Obtención Directa":{2014:36.1,2015:34.7,2016:33.0,2017:30.9,2018:25.4,2019:23.2,2020:20.8,2021:21.3,2022:18.0,2023:19.0,2024:14.7},
+  "Infraestructura":  {2014:2.9, 2015:4.1, 2016:3.8, 2017:5.1, 2018:5.5, 2019:6.3, 2020:6.2, 2021:5.8, 2022:5.9, 2023:6.2, 2024:6.8},
+  "Otras":            {2014:0.8, 2015:2.1, 2016:2.7, 2017:4.5, 2018:3.8, 2019:3.7, 2020:4.1, 2021:3.5, 2022:3.3, 2023:2.6, 2024:3.0}
 };
 
-// 9A — Tipo Difusión (%)
+// 9A — Tipo Difusión (%) — Gráfico 13 Oficial INE
 const difusion = {
-  "Difusión Pública":  {2014:70.1,2015:72.9,2016:74.2,2017:78.5,2018:74.0,2019:73.9,2020:74.9,2021:75.9,2022:76.9,2023:72.3,2024:74.7},
-  "Limitada/Petición": {2014:18.3,2015:13.4,2016:11.0,2017:10.0,2018:14.2,2019:14.3,2020:12.3,2021:9.9,2022:10.5,2023:12.6,2024:12.7},
-  "Est. Interna":      {2014:9.1,2015:13.1,2016:12.9,2017:10.3,2018:10.4,2019:10.3,2020:11.0,2021:11.1,2022:10.3,2023:11.0,2024:8.6},
-  "No Publicada":      {2014:2.5,2015:0.7,2016:1.9,2017:1.3,2018:1.4,2019:1.4,2020:1.8,2021:3.0,2022:2.3,2023:4.1,2024:4.1},
+  "Difusión Pública":  {2014:70.1,2015:72.9,2016:74.6,2017:78.5,2018:74.0,2019:73.9,2020:75.1,2021:75.9,2022:76.9,2023:72.3,2024:74.7},
+  "Limitada/Petición": {2014:18.3,2015:13.4,2016:11.0,2017:10.0,2018:14.2,2019:14.3,2020:12.3,2021:9.9, 2022:10.5,2023:12.6,2024:12.7},
+  "Est. Interna":      {2014:9.1, 2015:13.1,2016:12.9,2017:10.3,2018:10.4,2019:10.3,2020:10.8,2021:11.1,2022:10.3,2023:11.0,2024:8.5},
+  "No Publicada":      {2014:2.5, 2015:0.7, 2016:1.5, 2017:1.3, 2018:1.4, 2019:1.4, 2020:1.8, 2021:3.0, 2022:2.3, 2023:4.1, 2024:4.1}
 };
 
-// 7B — Cobertura Geográfica (%)
+// 7B — Cobertura Geográfica (%) — Cuadro 7 Oficial INE
 const cobertura = {
-  "Nacional":      {2014:88.0,2015:89.0,2016:89.8,2017:87.1,2018:86.7,2019:85.4,2020:87.4,2021:86.6,2022:87.9,2023:84.6,2024:87.3},
-  "Departamental": {2014:1.2,2015:0.3,2016:0.4,2017:0.6,2018:0.9,2019:2.6,2020:1.5,2021:2.8,2022:1.5,2023:3.8,2024:3.3},
-  "Asunción/AMC":  {2014:2.5,2015:1.7,2016:1.5,2017:1.6,2018:2.6,2019:2.6,2020:2.3,2021:2.0,2022:1.5,2023:1.8,2024:1.5},
-  "Otras":         {2014:6.6,2015:6.2,2016:4.9,2017:5.5,2018:4.6,2019:4.9,2020:4.6,2021:4.8,2022:4.9,2023:4.9,2024:4.1},
-  "No Aplica":     {2014:0.8,2015:2.7,2016:3.4,2017:5.1,2018:5.2,2019:4.3,2020:3.6,2021:3.5,2022:3.6,2023:4.4,2024:3.3},
+  "Nacional":      {2014:88.0,2015:89.0,2016:89.8,2017:87.1,2018:86.7,2019:85.7,2020:87.4,2021:86.6,2022:87.9,2023:84.6,2024:87.3},
+  "Departamental": {2014:1.2, 2015:0.3, 2016:0.4, 2017:0.6, 2018:0.9, 2019:2.3, 2020:1.5, 2021:2.8, 2022:1.5, 2023:3.8, 2024:3.3},
+  "Asunción/AMC":  {2014:2.5, 2015:1.7, 2016:1.5, 2017:1.6, 2018:2.6, 2019:2.6, 2020:2.3, 2021:2.0, 2022:1.5, 2023:1.8, 2024:1.5},
+  "Otras":         {2014:7.4, 2015:6.2, 2016:4.9, 2017:5.5, 2018:4.6, 2019:5.2, 2020:5.1, 2021:5.1, 2022:5.4, 2023:5.4, 2024:4.6},
+  "No Aplica":     {2014:0.8, 2015:2.7, 2016:3.4, 2017:5.1, 2018:5.2, 2019:4.3, 2020:3.6, 2021:3.5, 2022:3.6, 2023:4.4, 2024:3.3}
 };
 
-// 9B — Formas Difusión Pública (%) — SELECCIÓN MÚLTIPLE
+// 9B — Formas Difusión Pública (%) — Gráfico 14 Oficial INE
 const formasDif = {
   "Internet":        {2014:84.0,2015:89.6,2016:94.4,2017:93.0,2018:93.3,2019:94.2,2020:96.6,2021:98.0,2022:98.0,2023:98.6,2024:99.0},
   "Impresa":         {2014:45.6,2015:43.4,2016:37.8,2017:36.5,2018:33.5,2019:29.5,2020:26.4,2021:26.0,2022:26.0,2023:19.1,2024:19.7},
-  "Soporte Digital": {2014:36.7,2015:34.4,2016:31.6,2017:25.0,2018:20.1,2019:19.0,2020:17.8,2021:15.7,2022:16.3,2023:13.5,2024:12.2},
+  "Soporte Digital": {2014:36.7,2015:34.4,2016:31.6,2017:25.0,2018:20.1,2019:19.0,2020:17.8,2021:15.7,2022:16.3,2023:13.5,2024:12.2}
 };
 
-// 6C — Periodicidad Recolección (%)
+// 6C — Periodicidad Recolección (%) — Gráfico 10 Oficial INE
 const periRec = {
   "Regular":   {2014:69.7,2015:70.4,2016:69.3,2017:67.8,2018:71.1,2019:74.8,2020:76.7,2021:78.2,2022:83.0,2023:84.1,2024:87.3},
-  "Irregular": {2014:30.3,2015:29.6,2016:30.7,2017:32.2,2018:28.9,2019:25.2,2020:23.3,2021:21.8,2022:17.0,2023:15.9,2024:12.7},
+  "Irregular": {2014:30.3,2015:29.6,2016:30.7,2017:32.2,2018:28.9,2019:25.2,2020:23.3,2021:21.8,2022:17.0,2023:15.9,2024:12.7}
 };
 
-// 6B — Periodicidad Regular Detalle (%) — SELECCIÓN MÚLTIPLE
+// 6B — Periodicidad Regular Detalle (%) — Cuadro 6 Oficial INE
 const periDetalle = {
   "Anual":       {2014:36.9,2015:37.6,2016:37.2,2017:37.9,2018:40.2,2019:42.9,2020:42.8,2021:41.4,2022:42.4,2023:47.6,2024:48.4},
   "Mensual":     {2014:36.3,2015:32.7,2016:39.3,2017:36.5,2018:36.2,2019:42.5,2020:43.1,2021:43.7,2022:41.8,2023:46.3,2024:44.9},
-  "Diaria":      {2014:9.5,2015:10.7,2016:10.9,2017:13.7,2018:16.7,2019:19.5,2020:18.4,2021:19.7,2022:21.1,2023:22.6,2024:23.5},
-  "Decenal":     {2014:14.3,2015:14.6,2016:13.1,2017:11.4,2018:9.8,2019:9.2,2020:7.7,2021:7.4,2022:6.8,2023:2.4,2024:2.6},
-  "Trimestral":  {2014:4.2,2015:4.4,2016:3.8,2017:5.2,2018:5.3,2019:6.1,2020:7.0,2021:7.4,2022:9.9,2023:9.1,2024:8.7},
-  "Semestral":   {2014:1.8,2015:2.0,2016:2.7,2017:1.4,2018:1.6,2019:4.2,2020:5.4,2021:4.9,2022:4.6,2023:8.2,2024:9.0},
+  "Diaria":      {2014:9.5, 2015:10.7,2016:10.9,2017:13.7,2018:16.7,2019:19.5,2020:18.4,2021:19.7,2022:21.1,2023:22.6,2024:23.5},
+  "Semestral":   {2014:1.8, 2015:2.0, 2016:2.7, 2017:1.4, 2018:1.6, 2019:4.2, 2020:5.4, 2021:4.9, 2022:4.6, 2023:8.2, 2024:9.0},
+  "Trimestral":  {2014:4.2, 2015:4.4, 2016:3.8, 2017:5.2, 2018:5.3, 2019:6.1, 2020:7.0, 2021:7.4, 2022:9.9, 2023:9.1, 2024:8.7},
+  "Decenal":     {2014:14.3,2015:14.6,2016:13.1,2017:11.4,2018:9.8, 2019:9.2, 2020:7.7, 2021:7.4, 2022:6.8, 2023:2.4, 2024:2.6}
 };
 
-// CompA — Forma de Recolección (%) — SELECCIÓN MÚLTIPLE
+// CompA — Forma de Recolección (%) — Gráfico 9 Oficial INE
 const recoleccion = {
   "Datos Administrativos": {2014:42.6,2015:44.4,2016:43.5,2017:49.5,2018:55.3,2019:59.7,2020:59.7,2021:56.6,2022:62.9,2023:61.8,2024:67.2},
   "Entrevista Personal":   {2014:40.2,2015:41.3,2016:40.5,2017:39.0,2018:34.2,2019:33.1,2020:28.6,2021:27.1,2022:24.1,2023:24.0,2024:18.4},
-  "CASI":                  {2014:5.3,2015:2.6,2016:6.5,2017:5.0,2018:7.5,2019:10.6,2020:14.9,2021:15.9,2022:19.4,2023:22.4,2024:21.3},
+  "CASI":                  {2014:5.3, 2015:2.6, 2016:6.5, 2017:5.0, 2018:7.5, 2019:10.6,2020:14.9,2021:15.9,2022:19.4,2023:22.4,2024:21.3},
   "Otros":                 {2014:12.4,2015:10.2,2016:11.3,2017:11.0,2018:13.2,2019:12.3,2020:14.1,2021:16.7,2022:21.1,2023:22.0,2024:23.4},
-  "Entrevista Telefónica": {2014:0.0,2015:1.0,2016:0.6,2017:2.5,2018:2.6,2019:4.7,2020:5.6,2021:5.2,2022:6.8,2023:6.3,2024:6.1},
-  "Correo Postal":         {2014:4.7,2015:5.1,2016:7.7,2017:6.5,2018:5.7,2019:7.2,2020:10.1,2021:9.2,2022:10.5,2023:11.4,2024:9.0},
+  "Entrevista Telefónica": {2014:0.0, 2015:1.0, 2016:0.6, 2017:2.5, 2018:2.6, 2019:4.7, 2020:5.6, 2021:5.2, 2022:6.8, 2023:6.3, 2024:6.1},
+  "Correo Postal":         {2014:4.7, 2015:5.1, 2016:7.7, 2017:6.5, 2018:5.7, 2019:7.2, 2020:10.1,2021:9.2, 2022:10.5,2023:11.4,2024:9.0}
 };
 
-// 9C — Periodicidad Difusión Pública (%)
+// 9C — Periodicidad Difusión Pública (%) — Gráfico 15 Oficial INE
 const periDif = {
   "Regular":        {2014:62.7,2015:63.7,2016:64.3,2017:61.9,2018:63.7,2019:67.4,2020:70.2,2021:74.3,2022:77.9,2023:83.0,2024:85.1},
   "Irregular":      {2014:36.7,2015:34.9,2016:33.7,2017:29.9,2018:31.3,2019:28.3,2020:25.7,2021:24.3,2022:20.4,2023:16.3,2024:14.9},
-  "No determinada": {2014:0.6,2015:1.4,2016:2.0,2017:8.2,2018:5.1,2019:4.3,2020:4.1,2021:1.3,2022:1.7,2023:0.7,2024:0.0},
+  "No determinada": {2014:0.6, 2015:1.4, 2016:2.0, 2017:8.2, 2018:5.1, 2019:4.3, 2020:4.1, 2021:1.3, 2022:1.7, 2023:0.7, 2024:0.0}
 };
 
-// 2B — Tipo de Aporte de Otros Organismos (%)
+// 2B — Tipo de Aporte de Otros Organismos (%) — Cuadro 2 Oficial INE
 const tipoAporte = {
-  "Aporte Financiero":  {2014:62.3,2015:53.3,2016:51.9,2017:48.4,2018:45.5,2019:39.4,2020:35.5,2021:34.4,2022:27.0,2023:24.5,2024:19.0},
-  "Coop. Técnica":      {2014:14.5,2015:26.7,2016:24.1,2017:36.8,2018:35.6,2019:33.0,2020:38.7,2021:38.5,2022:40.0,2023:38.2,2024:34.5},
   "Recolección":        {2014:17.4,2015:17.8,2016:22.8,2017:16.8,2018:19.8,2019:25.5,2020:29.0,2021:34.4,2022:41.0,2023:43.6,2024:46.6},
+  "Coop. Técnica":      {2014:14.5,2015:26.7,2016:24.1,2017:36.8,2018:35.6,2019:33.0,2020:38.7,2021:38.5,2022:40.0,2023:38.2,2024:34.5},
+  "Aporte Financiero":  {2014:62.3,2015:53.3,2016:51.9,2017:48.4,2018:45.5,2019:39.4,2020:35.5,2021:34.4,2022:27.0,2023:24.5,2024:19.0},
   "Proc. Base de Datos":{2014:13.0,2015:15.6,2016:20.3,2017:20.0,2018:20.8,2019:21.3,2020:18.3,2021:16.7,2022:15.0,2023:17.3,2024:19.0},
-  "Difusión Resultados":{2014:4.3,2015:6.7,2016:11.4,2017:9.5,2018:10.9,2019:11.7,2020:8.6,2021:9.4,2022:10.0,2023:10.0,2024:15.5},
+  "Difusión Resultados":{2014:4.3, 2015:6.7, 2016:11.4,2017:9.5, 2018:10.9,2019:11.7,2020:8.6, 2021:9.4, 2022:10.0,2023:10.0,2024:15.5}
 };
 
-// 8B — Año de Referencia (%)
+// 8B — Año de Referencia (%) — Cuadro 8 Oficial INE
 const anoRef = {
-  "< 2013":    {2014:38.6,2015:31.8,2016:22.5,2017:18.6,2018:14.7,2019:12.8,2020:10.0,2021:9.4,2022:6.6,2023:0.0,2024:2.1},
-  "2013–2017": {2014:61.4,2015:68.2,2016:77.5,2017:81.4,2018:17.0,2019:8.9,2020:5.9,2021:4.8,2022:2.3,2023:0.0,2024:0.3},
-  "2018–2023": {2014:0.0,2015:0.0,2016:0.0,2017:0.0,2018:68.3,2019:78.3,2020:84.2,2021:85.8,2022:91.1,2023:100.0,2024:15.1},
-  "2024+":     {2014:0.0,2015:0.0,2016:0.0,2017:0.0,2018:0.0,2019:0.0,2020:0.0,2021:0.0,2022:0.0,2023:0.0,2024:82.5},
+  "< 2014":    {2014:38.6,2015:31.8,2016:22.5,2017:18.6,2018:14.7,2019:12.8,2020:10.0,2021:9.4, 2022:6.6, 2023:0.0,  2024:2.0},
+  "2014–2018": {2014:61.4,2015:68.2,2016:77.5,2017:81.4,2018:17.0,2019:8.9, 2020:5.9, 2021:4.8, 2022:2.3, 2023:0.0,  2024:0.3},
+  "2019–2023": {2014:0.0, 2015:0.0, 2016:0.0, 2017:0.0, 2018:68.3,2019:78.3,2020:84.2,2021:85.8,2022:91.1,2023:100.0,2024:14.4},
+  "2024":      {2014:0.0, 2015:0.0, 2016:0.0, 2017:0.0, 2018:0.0, 2019:0.0, 2020:0.0, 2021:0.0, 2022:0.0, 2023:0.0,  2024:79.0}
 };
 
-/* ═══════════════════════════════════════════
-   PALETA
-═══════════════════════════════════════════ */
+/* PALETA Y CONFIGURACIÓN */
 const C = { blue:'#1F72A6', blight:'#2BA8D9', orange:'#F2913D', ored:'#F2561D', green:'#27AE60', purple:'#8E44AD', teal:'#16A085', lgray:'#B0BEC5' };
 const PALETTE = [C.blue, C.blight, C.orange, C.ored, C.green, C.purple, C.teal, C.lgray];
 
-/* STATE */
-let currentYear = 2014;
+/* ESTADO INICIAL */
+let currentYear = 2024;
 let charts = {};
 
 /* HELPERS */
@@ -492,9 +480,7 @@ function doughnut(id, labels, data, colors){
   }});
 }
 
-/* ═══════════════════════════════════════════
-   KPIs
-═══════════════════════════════════════════ */
+/* KPIs */
 function renderKPIs(y){
   const prev = YEARS[YEARS.indexOf(y)-1];
   const total = totalOE[y];
@@ -515,16 +501,13 @@ function renderKPIs(y){
   `;
 }
 
-/* ═══════════════════════════════════════════
-   RANKING — agrupado por empate
-═══════════════════════════════════════════ */
+/* RANKING */
 function renderRanking(y){
   const total = totalOE[y];
   const rows = Object.entries(organismos)
     .map(([n,d])=>({name:n, n:d[y]||0}))
     .filter(r=>r.n>0).sort((a,b)=>b.n-a.n);
 
-  // Agrupar empates
   const groups=[];
   let i=0;
   while(i<rows.length){
@@ -534,9 +517,8 @@ function renderRanking(y){
   }
 
   let html=`<thead><tr><th>#</th><th>Organismo</th><th>OE</th><th>%</th><th style="width:90px">Barra</th></tr></thead><tbody>`;
-  let rank=1; let shown=0;
+  let rank=1;
   for(const grp of groups){
-    
     const pct=(grp.n/total*100).toFixed(1);
     const nc=rank===1?'top1':rank===2?'top2':rank===3?'top3':'';
     html+=`<tr>
@@ -545,64 +527,52 @@ function renderRanking(y){
       <td><strong>${grp.n}</strong></td><td>${pct}%</td>
       <td><div class="bar-pct" style="width:${Math.min(100,pct*4)}%"></div></td>
     </tr>`;
-    rank+=grp.names.length; shown++;
+    rank+=grp.names.length;
   }
   html+='</tbody>';
   document.getElementById('rankTable').innerHTML=html;
 }
 
-/* ═══════════════════════════════════════════
-   CHARTS AÑO
-═══════════════════════════════════════════ */
+/* GRÁFICOS AÑO */
 function renderDominio(y){
   const labs=Object.keys(dominios), data=labs.map(k=>dominios[k][y]);
   barH('chartDominio',labs,data);
 }
-
 function renderMetodologia(y){
   const labs=Object.keys(metodologia), data=labs.map(k=>metodologia[k][y]);
   barH('chartMetod',labs,data);
 }
-
 function renderDifusion(y){
   const labs=Object.keys(difusion), data=labs.map(k=>difusion[k][y]);
   doughnut('chartDifusion',labs,data,[C.blue,C.blight,C.orange,C.ored]);
 }
-
 function renderCobertura(y){
   const labs=Object.keys(cobertura), data=labs.map(k=>cobertura[k][y]);
   doughnut('chartCobertura',labs,data,[C.blue,C.blight,C.orange,C.ored,C.lgray]);
 }
-
 function renderFormasDif(y){
   const labs=Object.keys(formasDif), data=labs.map(k=>formasDif[k][y]);
   barV('chartFormasDif',labs,data,[C.blue,C.blight,C.orange]);
 }
-
 function renderPeriodRec(y){
   doughnut('chartPeriodRec',['Regular','Irregular'],[periRec['Regular'][y],periRec['Irregular'][y]],[C.blue,C.ored]);
 }
-
 function renderRecoleccion(y){
   const labs=Object.keys(recoleccion), data=labs.map(k=>recoleccion[k][y]);
   barH('chartRecoleccion',labs,data);
 }
-
 function renderPeriodDif(y){
   const labs=Object.keys(periDif), data=labs.map(k=>periDif[k][y]);
   doughnut('chartPeriodDif',labs,data,[C.blue,C.orange,C.lgray]);
 }
-
 function renderAporte(y){
   const labs=Object.keys(tipoAporte), data=labs.map(k=>tipoAporte[k][y]);
   barH('chartAporte',labs,data);
 }
-
 function renderAnoRef(y){
   const labs=Object.keys(anoRef), data=labs.map(k=>anoRef[k][y]);
   doughnut('chartAnoRef',labs,data,[C.lgray,C.blight,C.blue,C.orange]);
 }
-
 function renderPeriodDetalle(y){
   dc('chartPeriodDetalle');
   const labs=Object.keys(periDetalle), data=labs.map(k=>periDetalle[k][y]);
@@ -615,9 +585,7 @@ function renderPeriodDetalle(y){
   }});
 }
 
-/* ═══════════════════════════════════════════
-   TREND CHARTS
-═══════════════════════════════════════════ */
+/* GRÁFICOS TENDENCIA */
 function lineOpts(minY,maxY,pct=true){
   return { responsive:true, maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
@@ -646,7 +614,6 @@ function ds(label,key,obj,color,dash=false){
 function renderTrendCharts(){
   const YL=YEARS.map(String);
 
-  // Total OE
   dc('chartTrend4');
   const ctx4=document.getElementById('chartTrend4').getContext('2d');
   charts['chartTrend4']=new Chart(ctx4,{type:'bar',data:{labels:YL,datasets:[{
@@ -658,7 +625,6 @@ function renderTrendCharts(){
     scales:{y:{min:200,grid:{color:'#eee'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:11}}}}
   }});
 
-  // Difusión + Recolección
   mkLine('chartTrend1',[
     {label:'Difusión Pública (%)',data:YEARS.map(y=>difusion['Difusión Pública'][y]),borderColor:C.blue,backgroundColor:C.blue+'18',borderWidth:2.5,pointRadius:4,pointBackgroundColor:C.blue,fill:true,tension:0.3},
     {label:'Recolección Regular (%)',data:YEARS.map(y=>periRec['Regular'][y]),borderColor:C.blight,backgroundColor:C.blight+'18',borderWidth:2.5,pointRadius:4,pointBackgroundColor:C.blight,fill:true,tension:0.3},
@@ -666,7 +632,6 @@ function renderTrendCharts(){
     {label:'Part. Otros Org. (%)',data:YEARS.map(y=>participacion[y]),borderColor:C.orange,backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:C.orange,fill:false,tension:0.3,borderDash:[6,3]},
   ],50,105);
 
-  // Metodologías
   mkLine('chartTrend2',[
     ds('Fuentes Administrativas','Fuentes Admin.',metodologia,C.blue),
     ds('Obtención Directa','Obtención Directa',metodologia,C.ored),
@@ -674,7 +639,6 @@ function renderTrendCharts(){
     ds('Infraestructura','Infraestructura',metodologia,C.orange,true),
   ],0,55);
 
-  // Dominios
   mkLine('chartTrend3',[
     ds('Demografía y Sociales','Demografía y Sociales',dominios,C.blue),
     ds('Estad. Económicas','Estad. Económicas',dominios,C.orange),
@@ -682,7 +646,6 @@ function renderTrendCharts(){
     ds('Metodologías','Metodologías',dominios,C.ored,true),
   ],0,85);
 
-  // Recolección de Datos
   mkLine('chartTrend6',[
     ds('Datos Administrativos','Datos Administrativos',recoleccion,C.blue),
     ds('Entrevista Personal','Entrevista Personal',recoleccion,C.ored),
@@ -690,21 +653,19 @@ function renderTrendCharts(){
     ds('Correo Postal','Correo Postal',recoleccion,C.orange,true),
   ],0,75);
 
-  // Top 6 organismos
   dc('chartTrend5');
-  const top6=['INE','MSPyBS','BCP','MTESS','MOPC','MEF'];
-  const t6c=[C.blue,C.blight,C.orange,C.ored,C.green,C.purple];
+  const topOrg=['MSPyBS','INE','BCP','MOPC','MTESS','MEF'];
+  const topColors=[C.blue,C.blight,C.orange,C.ored,C.green,C.purple];
   const ctx5=document.getElementById('chartTrend5').getContext('2d');
-  charts['chartTrend5']=new Chart(ctx5,{type:'line',data:{labels:YL,datasets:top6.map((o,i)=>({
-    label:o,data:YEARS.map(y=>organismos[o][y]||0),borderColor:t6c[i],borderWidth:2.5,
-    pointRadius:4,pointBackgroundColor:t6c[i],fill:false,tension:0.3
+  charts['chartTrend5']=new Chart(ctx5,{type:'line',data:{labels:YL,datasets:topOrg.map((o,i)=>({
+    label:o,data:YEARS.map(y=>organismos[o][y]||0),borderColor:topColors[i],borderWidth:2.5,
+    pointRadius:4,pointBackgroundColor:topColors[i],fill:false,tension:0.3
   }))},options:{responsive:true,maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
     plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:13,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}`}}},
-    scales:{y:{min:0,max:100,grid:{color:'#eee'},ticks:{font:{size:10}}},x:{grid:{color:'#f0f0f0'},ticks:{font:{size:11}}}}
+    scales:{y:{min:0,max:90,grid:{color:'#eee'},ticks:{font:{size:10}}},x:{grid:{color:'#f0f0f0'},ticks:{font:{size:11}}}}
   }});
 
-  // Participación otros organismos
   dc('chartTrend7');
   const ctx7=document.getElementById('chartTrend7').getContext('2d');
   charts['chartTrend7']=new Chart(ctx7,{type:'bar',data:{labels:YL,datasets:[{
@@ -715,7 +676,6 @@ function renderTrendCharts(){
     scales:{y:{min:15,max:40,grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:11}}}}
   }});
 
-  // Año de referencia tendencia
   dc('chartTrend8');
   const ctx8=document.getElementById('chartTrend8').getContext('2d');
   const arKeys=Object.keys(anoRef);
@@ -724,15 +684,12 @@ function renderTrendCharts(){
     label:k,data:YEARS.map(y=>anoRef[k][y]),borderColor:arC[i],borderWidth:2.5,
     pointRadius:4,pointBackgroundColor:arC[i],fill:false,tension:0.3
   }))},options:{responsive:true,maintainAspectRatio:false,
-    interaction:{mode:'index',intersect:false},
-    plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:13,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}}},
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:13,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}`}}},
     scales:{y:{min:0,max:105,grid:{color:'#eee'},ticks:{callback:v=>v+'%',font:{size:10}}},x:{grid:{color:'#f0f0f0'},ticks:{font:{size:11}}}}
   }});
 }
 
-/* ═══════════════════════════════════════════
-   TAB / YEAR SWITCHING
-═══════════════════════════════════════════ */
+/* NAVEGACIÓN */
 let currentTab='year', trendRendered=false;
 
 function setTab(tab){
